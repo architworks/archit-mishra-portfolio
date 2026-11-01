@@ -4,24 +4,37 @@ This guide helps you install dependencies, run the site locally, and understand 
 
 ## Prerequisites
 
-- **Node.js 18+** (Next.js 15 requires Node 18.17 or newer).  
+- **Node.js 18.18 or newer** (required by Next.js 15).  
   Check your version:
   ```bash
   node --version
   ```
-- **npm** (ships with Node). Yarn, pnpm, or Bun will also work, but the scripts here assume npm.
+- **npm** (ships with Node). The scripts here assume npm, and the repo includes a `package-lock.json`.
 
 ## Installation
 
 Clone the repo and install packages:
 
 ```bash
-git clone https://github.com/yourname/personal-portfolio.git
-cd personal-portfolio
+git clone https://github.com/dynamiterdx/archit-mishra-portfolio.git
+cd archit-mishra-portfolio
 npm install
 ```
 
-> **Tip:** The repo uses `react`/`react-dom` 19.1 and Next.js 15.5, so let npm resolve peer dependencies automatically. No need for `--legacy-peer-deps`.
+## Environment variables
+
+The photography gallery reads from Google Drive, so it needs two values. Copy the example file and fill them in:
+
+```bash
+cp .env.example .env.local
+```
+
+| Variable | Value |
+| -------- | ----- |
+| `GOOGLE_DRIVE_API_KEY` | A Google API key with the Drive API enabled |
+| `GOOGLE_DRIVE_FOLDER` | The link or ID of a Drive folder that anyone with the link can view |
+
+The rest of the site works without them. `/photography` shows its "Couldn't Load These Photos" notice, and the home page leaves out its "From My Lens" section.
 
 ## Scripts
 
@@ -38,21 +51,33 @@ npm install
 ```
 ├── src
 │   ├── app
-│   │   ├── layout.tsx        # Root layout, fonts, metadata, nav + footer
-│   │   ├── page.tsx          # Home page that stitches together hero, skills, etc.
+│   │   ├── layout.tsx        # Root layout, fonts, metadata, theme script, nav + footer
+│   │   ├── page.tsx          # Home page that stitches the sections together
+│   │   ├── not-found.tsx     # 404 page
+│   │   ├── icon.svg          # Favicon
+│   │   ├── globals.css       # Design tokens for light and dark themes
+│   │   ├── design-system.css # Component styles (am-* classes)
+│   │   ├── api/drive/        # Routes that list and serve Google Drive photos
 │   │   ├── photography/      # Route for the photography gallery
 │   │   └── projects/         # Project listing + dynamic [slug] detail pages
-│   ├── components            # Reusable UI blocks (Hero, Skills, Navbar...)
-│   ├── data                  # JSON data for profile, photos, project cards
-│   └── lib                   # Utility libraries (MDX loader, slug helpers)
+│   ├── components            # One component per section or shared UI block
+│   ├── data
+│   │   └── site.ts           # Site copy: contact, nav, services, roles, stats, skills
+│   └── lib
+│       ├── google-drive.ts   # Drive API client and photo metadata parsing
+│       └── projects.ts       # MDX loader for project writeups
 ├── content
-│   └── projects              # MDX files for rich project writeups
-├── public                    # Static assets (images, logos, etc.)
-├── docs                      # This documentation set (MkDocs-friendly)
+│   └── projects              # MDX files for project writeups, plus TEMPLATE.mdx
+├── fonts                     # Urbanist and Lufga font files
+├── public                    # Images, the logo mark, and the resume PDF
+├── docs                      # This documentation set (MkDocs)
+├── DESIGN.md                 # Link to the design system and its key rules
+├── .env.example              # Environment variables to copy into .env.local
 ├── eslint.config.mjs         # Flat-config ESLint setup
-├── next.config.ts            # Next.js config (currently minimal)
-├── package.json
-└── tailwind/postcss configs
+├── mkdocs.yml                # MkDocs site config
+├── next.config.ts            # Next.js config (currently empty)
+├── postcss.config.mjs        # Tailwind's PostCSS plugin
+└── package.json
 ```
 
 ## Development workflow
@@ -60,17 +85,23 @@ npm install
 1. Run `npm run dev`.
 2. Visit http://localhost:3000.
 3. Edit files in `src/` &ndash; Next.js will hot-reload.
-4. Update MDX/JSON content as needed; most changes show up instantly. When editing MDX front matter, restart dev server if new metadata fields are introduced.
+4. Reload the browser after editing an MDX file. Projects are read from disk rather than imported, so hot reload doesn't pick them up.
 
 ## Troubleshooting
 
-- **"Element type is invalid" in dev**  
-  Double-check that any icon or component imports actually exist. For example, `react-icons/si` doesn’t provide Azure-specific icons, so use Font Awesome alternatives (`react-icons/fa6`) instead.
+- **The gallery says "Couldn't Load These Photos"**  
+  Open `/api/drive/photos` in your browser. Its JSON error names the cause, such as a missing API key, a bad folder link, or a folder that isn't shared. See [Photography](content.md#photography) for the setup.
+
+- **The gallery is empty**  
+  Only images directly inside the folder are listed. Images in subfolders don't appear.
 
 - **MDX page 500 errors**  
-  Usually caused by missing front matter fields. The loader expects `title`, `summary`, `date`, etc. See [Content Management](content.md#project-mdx) for the required shape.
+  Usually caused by invalid front matter or MDX syntax in the file. See [Content Management](content.md#project-mdx) for the expected shape.
 
-- **Fonts look off**  
-  The app currently loads the Inter font via `next/font/google`. If the network request fails, you’ll fall back to the system sans-serif stack.
+- **A project cover throws an image error**  
+  Covers go through `next/image`, which rejects remote hosts until they're allowed in `next.config.ts`. Use a path under `public/`, or add the host to `images.remotePatterns`.
 
-With the environment ready, head to [Architecture Tour](architecture.md) to understand how routes, layout, and data loading are wired up.
+- **The dev server shows stale or broken pages**  
+  Run `npm run dev:clean` to clear `.next` and start again.
+
+With the environment ready, head to the [Architecture Tour](architecture.md) to understand how routes, layout, and data loading are wired up.

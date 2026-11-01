@@ -1,0 +1,26 @@
+---
+title: Swiftline
+subtitle: An RSVP reader that flashes words for faster reading
+summary: A speed reader that shows one word at a time at your visual sweet spot, with document upload, speed control, progress tracking, and bookmarks.
+tags: [Next.js, Supabase, TypeScript, Reading]
+cover: /images/projects/swiftline.webp
+repo: https://github.com/architworks/swiftline
+demoUrl: https://swiftline-reader.vercel.app
+featured: true
+order: 30
+date: 2026-03-02
+---
+
+## What it does
+
+Rapid serial visual presentation keeps your eyes in one place and brings the words to you, so they don't wander. Swiftline turns that idea into a reader you can come back to.
+
+- **Adaptive speed:** go from 200 to 800+ words a minute with fine-tuned controls.
+- **Any format:** upload PDFs, EPUBs, DOCX, Markdown, or plain text.
+- **Smart bookmarks:** save your place and annotate any moment in the text.
+- **Persistent progress:** pick up where you stopped.
+
+## Under the hood
+
+- **Stack:** Next.js with Supabase for accounts and saved progress.
+- **Document parsing:** PDF, EPUB, and Word files are read with `pdfjs`, `epubjs`, and `mammoth`.

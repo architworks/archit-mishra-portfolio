@@ -1,31 +1,36 @@
-import ProjectCard from "@/components/ProjectCard";
+import Link from "next/link";
+import ProjectCover from "@/components/ProjectCover";
+import { ArrowUpRight } from "@/components/icons";
 import { getAllProjectsMeta } from "@/lib/projects";
 
-export const metadata = {
-  title: "Projects · GenAI DS",
-};
+export const metadata = { title: "Projects" };
 
 export default async function ProjectsPage() {
-  const all = await getAllProjectsMeta();
+  const projects = await getAllProjectsMeta();
   return (
-    <div className="py-12 sm:py-16">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6">
-        <h1 className="text-3xl font-bold">Project Demos</h1>
-        <p className="text-zinc-600 mt-2">Rendered from MDX files under <code className="bg-zinc-100 px-1 py-0.5 rounded">content/projects</code>.</p>
-
-        <div className="mt-8 grid gap-6 md:grid-cols-2">
-          {all.map((p, i) => (
-            <ProjectCard key={i} project={{
-              title: p.title,
-              description: p.summary || "",
-              summary: p.summary,
-              repo: p.repo || "",
-              tags: p.tags,
-              cover: p.cover,
-              slug: p.slug,
-            }} />
-          ))}
-        </div>
+    <div className="am-wrap am-page">
+      <div className="am-gallery-head">
+        <h1 className="am-h2">My <em className="am-accent">Projects</em></h1>
+        <p>Things I build outside work: agents, games, reading tools, and maps of how the world fits together.</p>
+      </div>
+      <div className="am-project-grid">
+        {projects.map((project) => (
+          <article key={project.slug} className="am-project-card">
+            <ProjectCover project={project} />
+            {project.tags?.length ? (
+              <div className="am-chips">
+                {project.tags.map((tag) => <span key={tag} className="am-chip">{tag}</span>)}
+              </div>
+            ) : null}
+            <h2>
+              {project.subtitle || project.title}
+              <Link className="am-arrow am-arrow--sm" href={`/projects/${project.slug}`} aria-label={`Open ${project.title}`}>
+                <ArrowUpRight />
+              </Link>
+            </h2>
+            {project.summary && <p>{project.summary}</p>}
+          </article>
+        ))}
       </div>
     </div>
   );

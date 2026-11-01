@@ -177,17 +177,14 @@ export async function listDrivePhotos(options: { revalidate?: number } = {}): Pr
   return photos;
 }
 
-// Only a file shared with "anyone with the link" can be read with an API key.
-export async function isDriveFilePublic(fileId: string): Promise<boolean> {
-  const apiKey = process.env.GOOGLE_DRIVE_API_KEY?.trim();
-  if (!apiKey) return false;
+// A Doc shared with "anyone with the link" serves its preview to everyone. A private one answers 401.
+export async function isGoogleDocPublic(docId: string): Promise<boolean> {
   try {
-    const params = new URLSearchParams({ key: apiKey, fields: "id", supportsAllDrives: "true" });
-    const response = await fetch(
-      `https://www.googleapis.com/drive/v3/files/${encodeURIComponent(fileId)}?${params.toString()}`,
-      { next: { revalidate: 300 } }
-    );
-    return response.ok;
+    const response = await fetch(`https://docs.google.com/document/d/${encodeURIComponent(docId)}/preview`, {
+      redirect: "manual",
+      next: { revalidate: 60 },
+    });
+    return response.status === 200;
   } catch {
     return false;
   }

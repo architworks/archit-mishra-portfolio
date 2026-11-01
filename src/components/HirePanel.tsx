@@ -10,11 +10,11 @@ export default function HirePanel() {
           <div className="am-hire__figure">
             <div className="am-hire__arch" />
             <Image
-              src="/images/archit-cutout.webp"
-              alt="Archit Mishra"
-              width={1585}
-              height={1400}
-              sizes="(max-width: 767px) 90vw, 560px"
+              src="/images/archit-cartoon-sweater.webp"
+              alt="Cartoon of Archit in a cream sweater, waving"
+              width={895}
+              height={1002}
+              sizes="(max-width: 767px) 80vw, 480px"
             />
           </div>
           <div>

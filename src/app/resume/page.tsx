@@ -1,14 +1,14 @@
 import { ArrowUpRight } from "@/components/icons";
 import { contact } from "@/data/site";
-import { isDriveFilePublic } from "@/lib/google-drive";
+import { isGoogleDocPublic } from "@/lib/google-drive";
 
 export const metadata = { title: "Resume" };
-export const revalidate = 300;
+export const revalidate = 60;
 
 const docUrl = `https://docs.google.com/document/d/${contact.resumeDocId}`;
 
 export default async function ResumePage() {
-  const available = await isDriveFilePublic(contact.resumeDocId);
+  const available = await isGoogleDocPublic(contact.resumeDocId);
 
   return (
     <div className="am-wrap am-page">

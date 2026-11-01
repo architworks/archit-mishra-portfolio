@@ -18,4 +18,4 @@ Read its `project/README.md` first, then `project/tokens.json`, `project/compone
 
 Theme switching uses `html.dark`, so the dark token block goes on `html.dark` in `src/app/globals.css`. Fonts stay in the existing `next/font/local` setup, and rasters use `next/image`.
 
-`src/app/globals.css` holds the tokens and `src/app/design-system.css` holds the component styles, ported from the system's `components/bundle.css` with site-specific additions at the end. Photos come straight from the Drive folder, with no titles or albums. The resume is a Google Doc embedded on `/resume`.
+`src/app/globals.css` holds the tokens and `src/app/design-system.css` holds the component styles, ported from the system's `components/bundle.css` with site-specific additions at the end. Photos come straight from the Drive folder, with no titles or albums. The resume is whatever document is in its shared Drive folder, embedded on `/resume`.

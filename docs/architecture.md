@@ -98,7 +98,7 @@ Headlines and one-off sentences stay in the component that shows them.
 
 ### Static assets
 
-- Images live under `public/images/`, and the resume is a Google Doc embedded on `/resume`.
+- Images live under `public/images/`, and the resume is the document in a shared Drive folder, embedded on `/resume`.
 - Project covers and page images go through `next/image`.
 
 ## Component highlights

@@ -4,8 +4,8 @@ export const contact = {
   phoneHref: "tel:+919161251999",
   linkedin: "https://www.linkedin.com/in/marchit/",
   github: "https://github.com/architworks",
-  // The resume is a Google Doc. Edit it in Drive and the site's viewer follows.
-  resumeDocId: "12wY0-iDlGTddv2XXD6nLHk0vOkO_alm0WbBvqtjig50",
+  // Whatever document is in this Drive folder is the resume. The newest file wins.
+  resumeFolderId: "18Aa2DTh-_2sctaVyjnSh9FkRtV1zPGHq",
 };
 
 export const navLeft = [

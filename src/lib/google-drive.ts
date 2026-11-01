@@ -177,16 +177,48 @@ export async function listDrivePhotos(options: { revalidate?: number } = {}): Pr
   return photos;
 }
 
-// A Doc shared with "anyone with the link" serves its preview to everyone. A private one answers 401.
-export async function isGoogleDocPublic(docId: string): Promise<boolean> {
+export type DriveDocument = {
+  previewUrl: string;
+  downloadUrl: string;
+  openUrl: string;
+};
+
+// Google Docs and uploaded files (PDF, Word) use different viewer and download URLs.
+function toDriveDocument(id: string, mimeType: string): DriveDocument {
+  const encodedId = encodeURIComponent(id);
+  if (mimeType === "application/vnd.google-apps.document") {
+    const doc = `https://docs.google.com/document/d/${encodedId}`;
+    return { previewUrl: `${doc}/preview`, downloadUrl: `${doc}/export?format=pdf`, openUrl: `${doc}/view` };
+  }
+  const file = `https://drive.google.com/file/d/${encodedId}`;
+  return {
+    previewUrl: `${file}/preview`,
+    downloadUrl: `https://drive.google.com/uc?export=download&id=${encodedId}`,
+    openUrl: `${file}/view`,
+  };
+}
+
+// Returns the most recently changed file in a folder shared with "anyone with the link".
+export async function getLatestDriveDocument(folderId: string): Promise<DriveDocument | null> {
+  const apiKey = process.env.GOOGLE_DRIVE_API_KEY?.trim();
+  if (!apiKey) return null;
   try {
-    const response = await fetch(`https://docs.google.com/document/d/${encodeURIComponent(docId)}/preview`, {
-      redirect: "manual",
+    const params = new URLSearchParams({
+      key: apiKey,
+      q: `'${folderId}' in parents and trashed = false and mimeType != 'application/vnd.google-apps.folder'`,
+      fields: "files(id,mimeType)",
+      orderBy: "modifiedTime desc",
+      pageSize: "1",
+      supportsAllDrives: "true",
+      includeItemsFromAllDrives: "true",
+    });
+    const response = await fetch(`https://www.googleapis.com/drive/v3/files?${params.toString()}`, {
       next: { revalidate: 60 },
     });
-    return response.status === 200;
+    const file = (await parseDriveResponse(response)).files?.[0];
+    return file ? toDriveDocument(file.id, file.mimeType) : null;
   } catch {
-    return false;
+    return null;
   }
 }
 

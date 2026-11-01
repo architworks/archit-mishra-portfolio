@@ -1,31 +1,29 @@
 import { ArrowUpRight } from "@/components/icons";
 import { contact } from "@/data/site";
-import { isGoogleDocPublic } from "@/lib/google-drive";
+import { getLatestDriveDocument } from "@/lib/google-drive";
 
 export const metadata = { title: "Resume" };
 export const revalidate = 60;
 
-const docUrl = `https://docs.google.com/document/d/${contact.resumeDocId}`;
-
 export default async function ResumePage() {
-  const available = await isGoogleDocPublic(contact.resumeDocId);
+  const resume = await getLatestDriveDocument(contact.resumeFolderId);
 
   return (
     <div className="am-wrap am-page">
       <div className="am-gallery-head">
         <h1 className="am-h2">My <em className="am-accent">Resume</em></h1>
       </div>
-      {available ? (
+      {resume ? (
         <>
           <div className="am-project-head__actions" style={{ margin: "0 0 24px" }}>
-            <a className="am-btn am-btn--primary am-btn--sm" href={`${docUrl}/export?format=pdf`}>
-              Download PDF
+            <a className="am-btn am-btn--primary am-btn--sm" href={resume.downloadUrl}>
+              Download
             </a>
-            <a className="am-btn am-btn--ghost am-btn--sm" href={`${docUrl}/view`} target="_blank" rel="noreferrer">
-              Open in Google Docs <ArrowUpRight />
+            <a className="am-btn am-btn--ghost am-btn--sm" href={resume.openUrl} target="_blank" rel="noreferrer">
+              Open in Google Drive <ArrowUpRight />
             </a>
           </div>
-          <iframe className="am-resume-frame" src={`${docUrl}/preview`} title="Archit Mishra’s resume" />
+          <iframe className="am-resume-frame" src={resume.previewUrl} title="Archit Mishra’s resume" />
         </>
       ) : (
         <div className="am-notice">

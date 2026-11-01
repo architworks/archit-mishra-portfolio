@@ -95,7 +95,7 @@ Add a photo to the folder and it appears on the site. There is nothing else to m
 ## Contact & metadata
 
 - Phone, email, LinkedIn, and the resume link live in `contact` in `src/data/site.ts`. The footer and "Let's Discuss" form both read from it.
-- The resume is a Google Doc shown on `/resume`. Edit the doc in Drive and the site follows. It must be shared as "Anyone with the link: Viewer", and `contact.resumeDocId` in `src/data/site.ts` holds its ID.
+- The resume is whatever document is in the Drive folder set by `contact.resumeFolderId` in `src/data/site.ts`. Drop in a Google Doc, PDF, or Word file and `/resume` shows it within about a minute. If the folder holds more than one, the most recently changed file wins. Share the folder once as "Anyone with the link: Viewer", and files added later inherit that.
 - Update `src/app/layout.tsx` metadata (title, description, `metadataBase`) if the name or domain changes.
 
 ## Static assets

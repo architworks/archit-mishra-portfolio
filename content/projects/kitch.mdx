@@ -1,0 +1,33 @@
+---
+title: Kitch
+subtitle: Multi-agent AI kitchen companion
+summary: A household meal-planning companion run by a coordinator agent that delegates to least-privilege specialists, with shared plans, pantry-aware recipes, grocery carts, and personal nutrition logs.
+tags: [Multi-Agent, Google ADK, Gemini, Next.js]
+cover: /images/projects/kitch.webp
+repo: https://github.com/architworks/kitch
+demoUrl: https://kitch.archit-mishra.com
+featured: true
+order: 40
+date: 2026-10-01
+---
+
+## What it does
+
+Kitch keeps one household's kitchen in one place. Meal plans, pantry stock, recipes, and grocery carts are shared across the household, while nutrition logs stay personal to each member.
+
+- Plans and edits meals for exact dates and ranges.
+- Generates recipes and builds the shopping list from them, leaving out what's already in the pantry.
+- Reads and updates pantry stock from text or a photo.
+- Logs and corrects nutrition entries from text or meal photos.
+- Remembers household context in natural language across sessions.
+
+## How it's built
+
+- **Hierarchical agents:** a coordinator agent built on Google ADK and Gemini delegates to least-privilege specialist agents, including a sandboxed multimodal vision agent.
+- **Long-term memory:** household context persists through Vertex AI Memory Bank.
+- **Human approval:** agents can prepare a live delivery cart, but payment and checkout stay outside their toolset, behind explicit approval in the interface.
+- **Stack:** a Next.js frontend, a FastAPI backend, and Supabase for hosted state with backend-only row-level security.
+
+## Security
+
+I threat-modelled the agent system, mapped 104 attack surfaces, and closed all High and Medium findings. That work covered prompt-injection containment, tenant isolation, encrypted tokens, data retention, and per-run caps on runaway AI loops.

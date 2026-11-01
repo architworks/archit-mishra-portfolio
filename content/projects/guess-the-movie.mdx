@@ -1,0 +1,27 @@
+---
+title: Guess the Movie
+subtitle: An online take on a card game for movie night
+summary: A shared-screen movie night where AI creates a fresh visual riddle for every card. Players guess aloud, open hints, and race for the point.
+tags: [Gemini, Next.js, TypeScript, Game]
+cover: /images/projects/guess-the-movie.webp
+repo: https://github.com/architworks/guess-the-frame
+demoUrl: https://guess-the-frame-indol.vercel.app
+featured: true
+order: 32
+date: 2026-09-27
+---
+
+## How it plays
+
+Add your players, set the kind of movies you're in the mood for, and choose the rounds, hints, and timer. Each card is an image generated for a real film.
+
+- Everyone shares one screen, guesses aloud, and types an answer.
+- Wrong guesses keep the answer hidden, and hints open one at a time.
+- A correct guess reveals the film and awards a point to the player you pick.
+
+## Under the hood
+
+- **Gemini for the game:** the API creates each puzzle and judges answers, and the AI picks films freely while rejecting duplicates within a game.
+- **No database:** the browser keeps the game, images, and scores in IndexedDB, so a closed tab can pick up where it left off.
+- **Protected answers:** the answer and hints travel in an authenticated, encrypted token, and the API key stays on the server.
+- **Always a card ready:** new cards generate while players are still guessing the current one.

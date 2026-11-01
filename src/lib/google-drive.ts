@@ -6,6 +6,7 @@ export type DrivePhoto = {
   thumbnailUrl: string;
   width?: number;
   height?: number;
+  exposure: string[];
 };
 
 type DriveFile = {
@@ -16,6 +17,11 @@ type DriveFile = {
   imageMediaMetadata?: {
     width?: number;
     height?: number;
+    cameraModel?: string;
+    focalLength?: number;
+    aperture?: number;
+    exposureTime?: number;
+    isoSpeed?: number;
   };
 };
 
@@ -88,6 +94,23 @@ function buildFolderQuery(folderId: string): string {
   return `'${escapedFolderId}' in parents and trashed = false and mimeType contains 'image/'`;
 }
 
+function formatExposure(meta: DriveFile["imageMediaMetadata"]): string[] {
+  if (!meta) return [];
+  const { cameraModel, focalLength, aperture, exposureTime, isoSpeed } = meta;
+  const shutter = exposureTime
+    ? exposureTime < 1
+      ? `1/${Math.round(1 / exposureTime)} s`
+      : `${exposureTime} s`
+    : undefined;
+  return [
+    cameraModel,
+    focalLength ? `${Math.round(focalLength)} mm` : undefined,
+    aperture ? `f/${aperture}` : undefined,
+    shutter,
+    isoSpeed ? `ISO ${isoSpeed}` : undefined,
+  ].filter((value): value is string => Boolean(value));
+}
+
 function toPhoto(file: DriveFile): DrivePhoto {
   const encodedId = encodeURIComponent(file.id);
   const imageUrl = `/api/drive/photo/${encodedId}`;
@@ -100,6 +123,7 @@ function toPhoto(file: DriveFile): DrivePhoto {
     thumbnailUrl: file.thumbnailLink || imageUrl,
     width: file.imageMediaMetadata?.width,
     height: file.imageMediaMetadata?.height,
+    exposure: formatExposure(file.imageMediaMetadata),
   };
 }
 
@@ -115,7 +139,7 @@ async function parseDriveResponse(response: Response): Promise<DriveFilesRespons
   return data || {};
 }
 
-export async function listDrivePhotos(): Promise<DrivePhoto[]> {
+export async function listDrivePhotos(options: { revalidate?: number } = {}): Promise<DrivePhoto[]> {
   const apiKey = getDriveApiKey();
   const folderId = extractDriveFolderId(process.env.GOOGLE_DRIVE_FOLDER);
   const photos: DrivePhoto[] = [];
@@ -126,7 +150,7 @@ export async function listDrivePhotos(): Promise<DrivePhoto[]> {
       key: apiKey,
       q: buildFolderQuery(folderId),
       fields:
-        "nextPageToken,files(id,name,mimeType,thumbnailLink,imageMediaMetadata(width,height))",
+        "nextPageToken,files(id,name,mimeType,thumbnailLink,imageMediaMetadata(width,height,cameraModel,focalLength,aperture,exposureTime,isoSpeed))",
       orderBy: "name",
       pageSize: "1000",
       supportsAllDrives: "true",
@@ -137,7 +161,7 @@ export async function listDrivePhotos(): Promise<DrivePhoto[]> {
 
     const response = await fetch(
       `https://www.googleapis.com/drive/v3/files?${params.toString()}`,
-      { cache: "no-store" }
+      options.revalidate ? { next: { revalidate: options.revalidate } } : { cache: "no-store" }
     );
     const data = await parseDriveResponse(response);
 
@@ -151,6 +175,19 @@ export async function listDrivePhotos(): Promise<DrivePhoto[]> {
   } while (pageToken);
 
   return photos;
+}
+
+// A Doc shared with "anyone with the link" serves its preview to everyone. A private one answers 401.
+export async function isGoogleDocPublic(docId: string): Promise<boolean> {
+  try {
+    const response = await fetch(`https://docs.google.com/document/d/${encodeURIComponent(docId)}/preview`, {
+      redirect: "manual",
+      next: { revalidate: 60 },
+    });
+    return response.status === 200;
+  } catch {
+    return false;
+  }
 }
 
 export async function fetchDrivePhoto(fileId: string): Promise<Response> {

@@ -2,65 +2,121 @@
 
 @custom-variant dark (&:where(html.dark, html.dark *));
 
+/* Tokens from the design system. Change them there first. */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --ground: #ffffff;
+  --surface: #f2f4f7;
+  --ink: #171717;
+  --ink-heading: #344054;
+  --ink-muted: #475467;
+  --ink-subtle: #667085;
+  --line: #eaecf0;
+  --line-strong: #667085;
+  --accent: #fd853a;
+  --accent-hover: #fb6514;
+  --on-accent: #171717;
+  --accent-display: #ec5f0a;
+  --accent-text: #c4320a;
+  --arc: #feb273;
+  --doodle: #4f4088;
+  --doodle-on-arc: #4f4088;
+  --nav: #171717;
+  --nav-ink: #ffffff;
+  --nav-tint: rgba(255,255,255,0.1);
+  --nav-tint-strong: rgba(255,255,255,0.2);
+  --nav-focus: #ffffff;
+  --navy: #1d2939;
+  --on-navy: #ffffff;
+  --band: #171717;
+  --band-foot: #272727;
+  --band-ink: #ffffff;
+  --band-muted: #d0d5dd;
+  --band-line: rgba(255,255,255,0.22);
+  --band-glass: rgba(255,255,255,0.06);
+  --marquee-field: #ea6f33;
+  --sheet: #ffffff;
+  --sheet-ink: #171717;
+  --focus: #171717;
+  --focus-on-band: #ffffff;
+  --danger: #b42318;
+  --success: #067647;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-18: 72px;
+  --space-35: 140px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+  --radius-2xl: 40px;
+  --radius-pill: 999px;
+  --container-max: 1440px;
+  --content-max: 1296px;
+  --measure: 68ch;
+  --shadow-float: 0 16px 40px rgba(23,23,23,0.22);
+  --font-display: var(--font-urbanist), "Segoe UI", system-ui, sans-serif;
+  --font-body: var(--font-lufga), "Segoe UI", system-ui, sans-serif;
+}
+
+html.dark {
+  --ground: #131313;
+  --surface: #1e1e1e;
+  --ink: #fcfcfd;
+  --ink-heading: #eaecf0;
+  --ink-muted: #c0c6d0;
+  --ink-subtle: #98a2b3;
+  --line: #344054;
+  --line-strong: #98a2b3;
+  --accent-display: #fd853a;
+  --accent-text: #fd853a;
+  --doodle: #b8a9f0;
+  --band: #1e1e1e;
+  --band-foot: #1e1e1e;
+  --focus: #fcfcfd;
+  --danger: #fda29b;
+  --success: #75e0a7;
+  --nav: #fcfcfd;
+  --nav-ink: #171717;
+  --nav-tint: rgba(23,23,23,0.08);
+  --nav-tint-strong: rgba(23,23,23,0.14);
+  --nav-focus: #171717;
+  color-scheme: dark;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-lufga);
-}
-
-/* Dark mode via html.dark (toggle button) */
-html.dark {
-  --background: #0a0a0a;
-  --foreground: #ededed;
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-lufga), "Segoe UI", system-ui, -apple-system, sans-serif;
-}
-
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-urbanist), "Segoe UI", system-ui, -apple-system, sans-serif;
-  font-weight: 600;
-}
-
-.hero-headline {
-  color: #171717;
-}
-
-html.dark .hero-headline {
-  color: #ffffff;
-}
-
-.navbar-surface {
-  background: rgba(0, 0, 0, 0.85);
-}
-
-html.dark .navbar-surface {
-  background: rgba(255, 255, 255, 0.24);
-}
-
-/* Accent utilities and helpers */
-.btn-primary { @apply rounded-full bg-orange-600 text-white px-5 py-3 font-medium hover:bg-orange-700; }
-.section { @apply py-12 sm:py-16; }
-
-@keyframes footer-fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.footer-fade-in {
-  animation: footer-fade-in 0.6s ease-out forwards;
+  --color-ground: var(--ground);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-ink-heading: var(--ink-heading);
+  --color-ink-muted: var(--ink-muted);
+  --color-ink-subtle: var(--ink-subtle);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-on-accent: var(--on-accent);
+  --color-accent-display: var(--accent-display);
+  --color-accent-text: var(--accent-text);
+  --color-arc: var(--arc);
+  --color-navy: var(--navy);
+  --color-on-navy: var(--on-navy);
+  --color-band: var(--band);
+  --color-band-foot: var(--band-foot);
+  --color-band-ink: var(--band-ink);
+  --color-band-muted: var(--band-muted);
+  --color-band-line: var(--band-line);
+  --color-band-glass: var(--band-glass);
+  --color-marquee-field: var(--marquee-field);
+  --color-sheet: var(--sheet);
+  --color-sheet-ink: var(--sheet-ink);
+  --color-focus: var(--focus);
+  --color-focus-on-band: var(--focus-on-band);
+  --color-danger: var(--danger);
+  --color-success: var(--success);
+  --font-sans: var(--font-body);
+  --font-display: var(--font-urbanist), "Segoe UI", system-ui, sans-serif;
 }

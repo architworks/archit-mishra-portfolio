@@ -8,35 +8,48 @@ The project uses the Next.js App Router (`src/app/`). The layout and page files 
 
 ```
 app/
-├── layout.tsx   # Wraps every route with fonts, navbar, footer, and metadata
-├── page.tsx     # The home route (/) - hero, skills, experience, projects, banner
+├── layout.tsx         # Wraps every route with fonts, theme script, navbar, footer, and metadata
+├── page.tsx           # The home route (/) - stacks the home sections in order
+├── not-found.tsx      # 404 page
+├── icon.svg           # Favicon
+├── globals.css        # Tailwind v4 import + design tokens
+├── design-system.css  # Component styles
 ├── projects/
-│   ├── page.tsx     # /projects - grid of project cards fed by MDX metadata
-│   └── [slug]/      # Dynamic segments compiled from MDX front matter
+│   ├── page.tsx       # /projects - grid of every project
+│   └── [slug]/        # /projects/<slug> - one page per MDX file
 ├── photography/
-│   └── page.tsx     # /photography - gallery with filters + lightbox
-└── globals.css      # Tailwind v4 base + theme tokens
+│   └── page.tsx       # /photography - gallery with album filters + lightbox
+└── api/drive/
+    ├── photos/        # GET /api/drive/photos - lists the folder as JSON
+    └── photo/[id]/    # GET /api/drive/photo/<id> - streams one image from Drive
 ```
 
-### `layout.tsx`
+### `src/app/layout.tsx`
 
-- Imports the Inter font and applies a CSS variable for Tailwind `@theme`.
-- Wraps the app in a flex column so the footer sticks to the bottom.
-- Renders `<Navbar />` and `<Footer />` globally (footer hides on the home page via `usePathname` logic inside the component).
+- Loads Urbanist and Lufga with `next/font/local` from the `fonts/` folder and exposes them as CSS variables.
+- Imports `src/app/globals.css` and `src/app/design-system.css`.
+- Runs a small inline script before paint, so a saved or system dark theme never flashes light.
+- Renders the skip link, `<Navbar />`, `<Footer />`, and `<PageMotion />` around every route.
 - Sets base metadata (`title`, `description`, `metadataBase`).
 
-### `page.tsx` (Home)
+### `src/app/page.tsx` (Home)
 
 ```tsx
+export const revalidate = 3600;
+
 export default async function Home() {
   const featured = await getFeaturedProjects();
   return (
     <>
       <Hero />
-      <Skills />
+      <ServicesBand />
       <Experience />
+      <HirePanel />
       <ProjectsShowcase projects={featured} />
-      {/* ... */}
+      <ResultsBand />
+      <Discuss />
+      <Marquee />
+      <LensSection />
     </>
   );
 }
@@ -44,53 +57,82 @@ export default async function Home() {
 
 - Fetches featured projects via `getFeaturedProjects`, which reads MDX front matter (more on that below).
 - Renders sections in sequence. Each section is its own component in `src/components/`.
-- Includes a highlight block (“Why partner with me?”) before the contact banner.
+- Regenerates at most once an hour, which is how often new Drive photos can reach the home page.
 
 ## Data & content flow
 
+### Site copy (TypeScript)
+
+`src/data/site.ts` exports the short, structured copy that components render:
+
+| Export | Used by |
+| ------ | ------- |
+| `contact` | `Discuss`, `Footer`, `HirePanel` |
+| `navLeft`, `navRight` | `Navbar`, `Footer` |
+| `services` | `ServicesBand` |
+| `roles` | `Experience` |
+| `hireStats` | `HirePanel` |
+| `results` | `ResultsBand` |
+| `skills` | `Marquee` |
+
+Headlines and one-off sentences stay in the component that shows them.
+
 ### Projects (MDX)
 
-- MDX lives under `content/projects/*.mdx`.
-- Each file requires a front matter block (`title`, `summary`, `tags`, `cover`, `date`, etc.).
+- MDX lives under `content/projects/*.mdx`. The filename is the URL slug.
 - `src/lib/projects.ts` handles:
-  - Reading files via `fs/promises`.
+  - Reading files via `fs/promises`, skipping `content/projects/TEMPLATE.mdx`.
   - Parsing front matter with `gray-matter`.
-  - Sorting and filtering (featured, order, latest).
+  - Sorting by `order`, then `date`, and filtering to featured projects.
   - Compiling MDX on demand with `next-mdx-remote/rsc`, `remark-gfm`, and `rehype-slug`.
-- `getAllProjectsMeta` returns typed metadata so both the carousel and `/projects` grid can render quickly without compiling MDX.
+- `getAllProjectsMeta` returns typed metadata so the home rail and the `/projects` grid can render without compiling MDX.
+- `src/components/mdx-components.tsx` maps MDX images to a lazy-loaded `<img>`. The `.am-prose` class styles everything else.
 
-### Quick data (JSON)
+### Photographs (Google Drive)
 
-- `src/data/projects.json` &mdash; Fills the project card grid on `/projects`. These entries can diverge from MDX details if you want lighter-weight cards or sandboxes.
-- `src/data/photos.json` &mdash; Feeds the photography gallery. Each entry includes `album`, `tags`, and optional remote/local image URLs.
-- `src/data/profile.json` &mdash; Supplies the hero portrait path.
+- `src/lib/google-drive.ts` lists the images in the folder named by `GOOGLE_DRIVE_FOLDER`, using `GOOGLE_DRIVE_API_KEY`.
+- There are no titles or albums to maintain. Each photo's exposure readout comes from the metadata Drive reads from the image file, and it stays empty if the file has none.
+- `LensSection` calls the library directly on the server, caches the list for an hour, and shows the first three photos. If Drive fails or the folder is empty, the section leaves itself out.
+- `GoogleDriveGallery` runs in the browser and fetches `/api/drive/photos` uncached. The selected album and open photo are kept in the URL (`?album=` and `?photo=`), so a view can be shared.
+- Images always load through `/api/drive/photo/<id>`, which keeps the API key on the server. To `next/image`, they're local URLs, so `next.config.ts` needs no remote hosts.
 
 ### Static assets
 
-- All images live under `public/`.
-- Next.js `next/image` handles optimisation. Remote URLs (e.g., Supabase) use the `unoptimized` flag in `PhotoCard` to avoid proxying.
+- Images live under `public/images/`, and the resume is a Google Doc embedded on `/resume`.
+- Project covers and page images go through `next/image`.
 
 ## Component highlights
 
 | Component | Responsibility | Notes |
 | --------- | -------------- | ----- |
-| `Hero` | Animated landing section with CTA buttons | Uses Framer Motion, reads profile image from JSON |
-| `Skills` | Progress bars + “skill stories” cards | Mix of `react-icons` Simple Icons + Font Awesome |
-| `Experience` | Timeline of audit-grade work | Uses fragments to align left/right columns |
-| `ProjectsShowcase` | Horizontal carousel with scroll snapping | Accepts `ProjectMeta[]`, supports repo/external links |
-| `PhotoGallery` | Filterable grid with lightbox | Keyboard accessible; filters by album/tag |
-| `ConnectBanner` | Dark footer banner with CTA | Hides the default light footer on the home page |
+| `Hero` | Landing section with the portrait and portfolio switch | Reveals `HeroDoodles` once the headline scrolls away |
+| `ServicesBand` | "What I Build" cards on a dark band (`#about`) | Each card has a diagram or photograph |
+| `Experience` | Timeline of roles (`#resume`) | Each role carries a `Readout` of real numbers |
+| `HirePanel` | "Why Hire Me?" stats and email button (`#hire`) | Reads `hireStats` and `contact` |
+| `ProjectsShowcase` | Scrolling rail of featured projects (`#projects`) | Accepts `ProjectMeta[]`, renders `ProjectCover` |
+| `ResultsBand` | Measured outcomes on a dark band (`#results`) | Fills the slot where testimonials would go |
+| `Discuss` | Email field that opens a mail draft (`#contact`) | Validates the address, then opens a `mailto:` link |
+| `Marquee` | Scrolling list of skills | Has a pause button |
+| `LensSection` | First three photographs (`#photography`) | Server component, hides itself when there are no photos |
+| `GoogleDriveGallery` | `/photography` grid with album filters and lightbox | Keyboard accessible, with loading, empty, and error states |
+| `ProjectCover` | Linked project cover | Falls back to the silk band image when a project has no `cover` |
+| `Readout` | Row of real numbers under work and photographs | Renders nothing when the list is empty |
+| `PageMotion` | Rises each block into view once on scroll | Skipped under `prefers-reduced-motion`; blocks stay visible without it |
+| `Navbar`, `Footer`, `ThemeToggle`, `icons` | Site chrome and inline SVG icons | `Footer` reuses `Brand` from `Navbar` |
 
 ## Styling & theming
 
-- Tailwind v4’s `@import "tailwindcss";` and `@theme inline` provide variables.
-- Dark mode toggled by adding `.dark` class to `<html>` via a simple hook (`ThemeToggle` component).
-- Utility classes handle most spacing/typography; extra custom CSS is minimal (animations and helper classes).
+The styling comes from a design system. `DESIGN.md` links to it and lists the rules to follow.
+
+- `src/app/globals.css` holds the design tokens: color, type, spacing, radius, and shadow as CSS variables on `:root`, with dark overrides on `html.dark`. It also imports Tailwind and maps the tokens into `@theme inline`.
+- `src/app/design-system.css` holds the component styles as `am-*` classes, ported from the design system. Site-specific additions sit at the end, after the `Site additions` comment.
+- Components use those `am-*` classes rather than Tailwind utilities.
+- Dark mode is the `.dark` class on `<html>`. The inline script in `src/app/layout.tsx` sets it from the saved choice or the system preference, and `ThemeToggle` flips it and saves the choice to `localStorage`.
 
 ## Deployment posture
 
-- No server components require custom runtimes; can be deployed on Vercel, Netlify, or any Node-friendly host.
-- External dependencies: none at runtime aside from font fetching and remote images if used.
-- The `metadataBase` in `layout.tsx` should be updated to your actual domain before going live.
+- The site needs a Node runtime, because the Drive API routes and the hourly regeneration run on the server. Vercel and other Next.js hosts work.
+- At runtime, it depends on the Google Drive API. Everything except the photographs keeps working if Drive is down.
+- Fonts ship in the repo, so nothing is fetched from a font service.
 
-With the architecture under your belt, continue to [Content Management](content.md) to learn how to keep projects, skills, and photography up to date.
+With the architecture under your belt, continue to [Content Management](content.md) to learn how to keep projects, site copy, and photography up to date.

@@ -1,12 +1,13 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import "./design-system.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import PageMotion from "@/components/PageMotion";
 
 const urbanist = localFont({
   src: [
-    { path: "../../fonts/urbanist/static/Urbanist-Regular.ttf", weight: "400", style: "normal" },
     { path: "../../fonts/urbanist/static/Urbanist-Medium.ttf", weight: "500", style: "normal" },
     { path: "../../fonts/urbanist/static/Urbanist-SemiBold.ttf", weight: "600", style: "normal" },
     { path: "../../fonts/urbanist/static/Urbanist-Bold.ttf", weight: "700", style: "normal" },
@@ -17,7 +18,6 @@ const urbanist = localFont({
 
 const lufga = localFont({
   src: [
-    { path: "../../fonts/lufga/LufgaLight.ttf", weight: "300", style: "normal" },
     { path: "../../fonts/lufga/LufgaRegular.ttf", weight: "400", style: "normal" },
     { path: "../../fonts/lufga/LufgaMedium.ttf", weight: "500", style: "normal" },
     { path: "../../fonts/lufga/LufgaSemiBold.ttf", weight: "600", style: "normal" },
@@ -27,15 +27,24 @@ const lufga = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "GenAI Data Scientist · Portfolio",
-  description:
-    "Portfolio of a GenAI-focused data scientist: projects, demos and photography.",
-  metadataBase: new URL("http://archit-mishra.vercel.app"),
-  icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon.ico",
+  title: {
+    default: "Archit Mishra · AI Engineer and Photographer",
+    template: "%s · Archit Mishra",
   },
+  description:
+    "Archit Mishra is a senior AI engineer at Oracle who builds governed agent platforms and photographs when the light is good. Projects, results, and photography.",
+  metadataBase: new URL("https://www.archit-mishra.com"),
 };
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#131313" },
+  ],
+};
+
+// Runs before paint so a saved or system dark theme never flashes light.
+const themeScript = `try{var t=localStorage.getItem("theme");if(t?t==="dark":matchMedia("(prefers-color-scheme: dark)").matches)document.documentElement.classList.add("dark")}catch(e){}`;
 
 export default function RootLayout({
   children,
@@ -43,13 +52,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`scroll-smooth ${urbanist.variable} ${lufga.variable}`} suppressHydrationWarning>
-      <body className="font-sans antialiased">
-        <div className="min-h-screen flex flex-col">
-          <Navbar />
-          <main className="flex-1">{children}</main>
-          <Footer />
-        </div>
+    <html lang="en" className={`${urbanist.variable} ${lufga.variable}`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
+      <body>
+        <a className="am-skip" href="#main">Skip to Content</a>
+        <Navbar />
+        <main id="main">{children}</main>
+        <Footer />
+        <PageMotion />
       </body>
     </html>
   );

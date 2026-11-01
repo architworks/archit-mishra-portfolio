@@ -1,0 +1,28 @@
+---
+title: GeoSight
+subtitle: A global geopolitics lens
+summary: An interactive atlas of alliances, conflicts, and historical shifts, with a conversational AI analyst that knows which year you're looking at.
+tags: [Gemini, D3.js, React, TypeScript]
+cover: /images/projects/geosight.webp
+repo: https://github.com/architworks/political_alliance_explorer
+demoUrl: https://political-alliance-explorer.vercel.app
+featured: true
+order: 34
+date: 2026-04-06
+---
+
+## What it does
+
+GeoSight combines a vector world map with LLM reasoning to make a live map of global politics. It knows which alliances were active in 1960 versus 2026, and it pulls in current developments as they happen.
+
+- **Interactive map:** zoom, pan, and click through countries, with layers for military and economic alliances and active conflicts.
+- **Timeline:** switch between eras from 1914 through the Cold War to 2026.
+- **Live intel ticker:** current headlines fetched through Gemini Search Grounding.
+- **AI analyst:** a chat sidebar that stays aware of the map's current state.
+- **Alliance comparison:** a visual way to compare overlapping memberships.
+
+## Under the hood
+
+- **Stack:** React 19, TypeScript, and Vite, with D3.js for the map.
+- **Context injection:** changing the year updates the analyst's context, so it talks about the Cold War when the map shows the Cold War.
+- **On-demand summaries:** country, alliance, and conflict panels are generated when you open them.

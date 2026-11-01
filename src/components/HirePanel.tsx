@@ -20,7 +20,7 @@ export default function HirePanel() {
           <div>
             <h2 className="am-h2">Why <em className="am-accent">Hire Me</em>?</h2>
             <p className="am-hire__lede">
-              I help auditors and operators trust GenAI in production, shipping measurable wins while keeping governance, privacy, and uptime front and center.
+              I help teams trust AI in production, shipping agents with the guardrails, evals, and observability that turn a demo into measurable business value.
             </p>
             <dl className="am-stats">
               {hireStats.map((stat) => (

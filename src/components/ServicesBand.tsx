@@ -5,7 +5,7 @@ import { ArrowUpRight } from "@/components/icons";
 import { services } from "@/data/site";
 
 const diagrams: Record<string, ReactNode> = {
-  "Agent Lab": (
+  "Agent Systems": (
     <svg viewBox="0 0 320 84" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
       <path d="M58 42H110M170 42l52-24M170 42l52 24" strokeDasharray="4 5" />
       <circle cx="36" cy="42" r="22" />
@@ -15,7 +15,7 @@ const diagrams: Record<string, ReactNode> = {
       <path d="M28 42h16M132 42h16M140 34v16M238 18h12M238 66h12" />
     </svg>
   ),
-  "Evaluation Bench": (
+  "Evaluation & Guardrails": (
     <svg viewBox="0 0 320 84" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       <path d="M4 74h312" />
       <path d="M4 62 54 54l50 6 50-22 50 8 50-30 58-8" />
@@ -32,7 +32,7 @@ export default function ServicesBand() {
         <div className="am-sec-head">
           <h2 className="am-h2">What I <em className="am-accent">Build</em></h2>
           <p style={{ color: "var(--band-ink)" }}>
-            Beyond client work, I maintain a sandbox of agents, evaluation harnesses, and creative pipelines to keep my skills sharp.
+            At work and on the side, I build agents, the guardrails that keep them honest, and playful experiments that keep me sharp.
           </p>
         </div>
         <div className="am-services">
@@ -60,7 +60,7 @@ export default function ServicesBand() {
                     />
                   )}
                 </div>
-                <Link className="am-arrow" href={service.href} aria-label={`Open ${service.title}`}>
+                <Link className="am-arrow" href={service.href} aria-label={service.linkLabel}>
                   <ArrowUpRight />
                 </Link>
               </div>

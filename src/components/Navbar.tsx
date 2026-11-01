@@ -1,6 +1,5 @@
 "use client";
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import ThemeToggle from "@/components/ThemeToggle";
@@ -10,7 +9,6 @@ import { navLeft, navRight } from "@/data/site";
 export function Brand() {
   return (
     <Link className="am-nav__brand" href="/" aria-label="Archit Mishra, home">
-      <Image src="/am-mark.svg" alt="" width={44} height={44} />
       <span translate="no">Archit Mishra</span>
     </Link>
   );

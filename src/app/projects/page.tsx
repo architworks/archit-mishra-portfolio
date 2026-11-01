@@ -11,7 +11,7 @@ export default async function ProjectsPage() {
     <div className="am-wrap am-page">
       <div className="am-gallery-head">
         <h1 className="am-h2">My <em className="am-accent">Projects</em></h1>
-        <p>Side projects where I tinker with LangGraph agents, evaluation tooling, and storytelling pipelines outside of client work.</p>
+        <p>Things I build outside work: agents, games, reading tools, and maps of how the world fits together.</p>
       </div>
       <div className="am-project-grid">
         {projects.map((project) => (

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Readout from "@/components/Readout";
 import { roles } from "@/data/site";
 
@@ -27,6 +28,9 @@ export default function Experience() {
             </li>
           ))}
         </ol>
+        <div className="am-timeline-more">
+          <Link className="am-btn am-btn--ghost am-btn--sm" href="/resume">View Full Resume</Link>
+        </div>
       </div>
     </section>
   );

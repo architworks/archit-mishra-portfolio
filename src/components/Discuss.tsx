@@ -59,8 +59,8 @@ export default function Discuss() {
         </p>
         <ul className="am-trust">
           <li><Pin />Bengaluru, India</li>
-          <li><Briefcase />Data Scientist at AB InBev</li>
-          <li><Globe />130 markets supported</li>
+          <li><Briefcase />Senior AI Engineer at Oracle</li>
+          <li><Globe />IIT Kanpur alum</li>
         </ul>
       </div>
     </section>

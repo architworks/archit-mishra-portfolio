@@ -1,0 +1,32 @@
+---
+title: TenderLens
+subtitle: AI bidding agent for RFQ evaluation
+summary: An AI-assisted procurement engine that takes a buyer from messy vendor submissions to a defensible award recommendation, with the scoring model locked before any bid is judged.
+tags: [Agents, Procurement, FastAPI, Next.js, Azure OpenAI]
+cover: /images/projects/tenderlens.webp
+repo: https://github.com/architworks/rfq_automation_system
+demoUrl: https://rfq-automation-system-web.vercel.app
+featured: true
+order: 36
+date: 2026-04-14
+---
+
+## Why I built it
+
+Procurement teams often aren't sure how to turn a broad scope of work into a rigorous definition of value before vendor responses arrive. TenderLens makes them decide that first, so the evaluation logic can't be invented after seeing the bids.
+
+## How it works
+
+1. A buyer provides the RFQ context.
+2. AI proposes an evaluation model: criteria, weights, thresholds, questions, and response schedules.
+3. The buyer edits that model and locks it.
+4. AI generates the vendor questionnaire from the locked model.
+5. Vendors submit messy documents, and the system extracts and normalizes the evidence.
+6. Vendors pass through a technical gate, then qualified vendors go to commercial analysis.
+7. The system produces one official award outcome, plus advisory scenarios for comparison.
+
+## Under the hood
+
+- **Stack:** a Next.js frontend and a FastAPI backend with Pydantic v2.
+- **Structured outputs:** rubric generation uses the OpenAI Responses API with a Pydantic schema as the contract, rather than prompt-only JSON.
+- **Decision support, not a chatbot:** every output is tied to evidence and to the locked framework, so vendors aren't judged ad hoc.

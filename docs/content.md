@@ -1,130 +1,108 @@
 # Content Management
 
-Keeping the site fresh is mostly about editing MDX, JSON, and the occasional asset. This guide covers how to update each content surface safely.
+Keeping the site fresh is mostly about editing MDX, one TypeScript file, and your Drive folder. This guide covers how to update each content surface safely.
+
+The design system has one rule for all of it: never invent a quote, rating, award, or metric. Every piece of work and every photograph shows real numbers.
 
 ## Project MDX
 
-Project deep dives live under `content/projects/`. Each file follows the pattern below:
+Project writeups live under `content/projects/`. To add one, copy `content/projects/TEMPLATE.mdx` and rename it. The filename becomes the URL, so `content/projects/quizzaro.mdx` is served at `/projects/quizzaro`. Each file follows the pattern below:
 
 ```md
 ---
-title: Agentic Research Notebook
-subtitle: Local-first assistant for literature sprints
-summary: A notebook app that spins up LangGraph agents to digest papers.
-tags: [LangGraph, Next.js, SQLite]
-cover: /images/prj-1.svg
-repo: https://github.com/architmishrapro/agentic-research-notebook
-demoUrl: https://research-notebook-demo.vercel.app
+title: Quizzaro
+subtitle: GenAI quiz coach that adapts to any topic
+summary: Instant quizzes, adaptive drills, and detailed explanations powered by Azure OpenAI to help learners improve faster.
+tags: [GenAI, Next.js, Azure, Education]
+cover: /images/quizzaro-home.webp
+demoUrl: https://archits-quiz-app.vercel.app/
 featured: true
-order: 18
-date: 2024-11-01
+order: 28
+date: 2024-11-05
 ---
 
 ## Why it exists
 The story goes here...
 ```
 
-### Required fields
+### Expected fields
 
-- `title` &mdash; Displayed on cards and detail pages.
-- `summary` &mdash; Short blurb used for the carousel and `/projects` grid.
-- `cover` &mdash; Path to an image under `public/` or a remote URL.
-- `date` &mdash; ISO string (`YYYY-MM-DD`); used for sorting if `order` isn’t set.
+Set these on every project:
+
+- `title` &mdash; Displayed on covers and detail pages.
+- `summary` &mdash; Short blurb used on the home rail and the `/projects` grid.
+- `date` &mdash; ISO string (`YYYY-MM-DD`); used for sorting when `order` is equal or unset.
 
 ### Optional fields
 
-- `subtitle`, `repo`, `demoUrl`, `linkOut`, `tags`, `featured`, `order`.
-- `featured: false` removes the project from the homepage carousel but keeps it on `/projects`.
-- `order` lets you pin certain projects. Higher numbers appear first.
+- `subtitle` &mdash; Shown on the detail page and in place of the title in the `/projects` grid.
+- `tags` &mdash; Shown as chips.
+- `cover` &mdash; Path to an image under `public/`, such as `/images/quizzaro-home.webp`. Without one, the project gets the silk band image as its cover. Remote URLs need a matching `images.remotePatterns` entry in `next.config.ts`.
+- `repo`, `demoUrl` &mdash; Add the "View Source" and "Open Live Demo" buttons on the detail page.
+- `featured` &mdash; Projects are featured by default. `featured: false` removes one from the home rail but keeps it on `/projects`.
+- `order` &mdash; Pins projects. Higher numbers appear first, and any project with an `order` comes before those without one.
 
-> **Reminder:** After adding new MDX files, restart the dev server so Next.js regenerates cache and static params.
+`linkOut` is in the template and gets parsed, but no page shows it yet.
 
-## Project cards (`projects.json`)
+> **Reminder:** Project files are read from disk, so reload the browser to see your edits. On a deployed site, changes go live with the next build.
 
-`src/data/projects.json` powers the `/projects` overview grid. A lightweight card might look like:
+## Site copy (`src/data/site.ts`)
 
-```json
-{
-  "title": "PromptOps Lab",
-  "description": "Open-source CLI + dashboard to regression-test prompts, guardrails, and agent flows.",
-  "repo": "https://github.com/architmishrapro/prompt-ops-lab",
-  "tags": ["Evaluations", "TypeScript", "CLI"],
-  "cover": "/images/prj-2.svg"
-}
-```
+Most short copy lives in `src/data/site.ts`:
 
-- `demoUrl` can be added if you want a “Open Demo” link on the card.
-- Cards can include projects that don’t yet have MDX writeups (great for sandboxes or WIP ideas).
+| Export | What it controls |
+| ------ | ---------------- |
+| `contact` | Email, phone, LinkedIn, and resume link |
+| `navLeft`, `navRight` | Links on either side of the navbar; the footer reuses them |
+| `services` | "What I Build" cards |
+| `roles` | Experience timeline, including each role's `readout` |
+| `hireStats` | Numbers in the "Why Hire Me?" panel |
+| `results` | Measured outcome cards |
+| `skills` | Words in the scrolling marquee |
 
-## Skills & Resume flavour
+A few details to watch for:
 
-- Progress bars are defined directly in `src/components/Skills.tsx`. Each entry is a `{ name, level, Icon }`.
-- The companion “skill stories” cards can be edited in the same file &mdash; change titles, captions, or bullet highlights to match your evolving lab.
+- Set `current: true` on the role that's in progress. It marks that row on the timeline.
+- A service with `highlights` shows them under a diagram, which `src/components/ServicesBand.tsx` looks up by the service's `title`. If you rename or add one, update the `diagrams` map too.
+- A service with an empty `highlights` list shows `public/images/photo-flt-6151.webp` instead.
 
-## Experience timeline
+Headlines and one-off sentences stay in their components. For example, the "Why Hire Me?" paragraph is in `src/components/HirePanel.tsx`, and the location and employer list is in `src/components/Discuss.tsx`.
 
-- `src/components/Experience.tsx` contains an array of roles. Update the `roles` array to tweak copy, add achievements, or reorder positions.
-- To hide older roles, comment them out or move them to the end of the array.
+## Photography
 
-## Photography gallery
+Photographs come from a single Google Drive folder, not from the repo. To publish one, add it to the folder. It appears in the `/photography` gallery right away and can reach the home page within an hour.
 
-- Edit `src/data/photos.json` to add or prune photos.
-- `src/app/photography/page.tsx` reminds collaborators where to find the JSON file.
-- Local images should live under `public/images/`.
-- Remote URLs (e.g., Supabase) are fine; the gallery automatically disables Next.js optimisation for absolute URLs.
+### Setting up the folder
 
-### Hosting photos on Supabase
-
-If you prefer to keep RAWs or high-res assets off the repo, Supabase Storage works nicely:
-
-1. **Create a bucket**  
-   In the Supabase dashboard, open *Storage → Buckets* and create a bucket (e.g., `personal-portfolio`), leaving it public so Next.js can fetch assets without signed URLs.
-
-2. **Upload images**  
-   You can drag-and-drop via the dashboard or script it with the Supabase CLI. Organise files however you like; the JSON entries just need the final URL.
-
-3. **Copy the public URL**  
-   Supabase gives you a path like  
-   `https://<project-ref>.supabase.co/storage/v1/object/public/personal-portfolio/royal-bengal-tiger.jpg`
-
-4. **Reference the URL in `photos.json`**  
-   ```json
-   {
-     "src": "https://<project-ref>.supabase.co/storage/v1/object/public/personal-portfolio/Royal-Bengal-Tiger.jpg",
-     "title": "King of the Jungle",
-     "album": "Wildlife",
-     "tags": ["tiger", "nature"],
-     "date": "2023-08-26"
-   }
+1. **Create an API key.** In the Google Cloud console, enable the Drive API and create an API key.
+2. **Share the folder.** Set general access to "Anyone with the link" with Viewer permission. An API key can only read public files.
+3. **Set the environment variables.** Add these to `.env.local`, and to your host's settings when you deploy:
+   ```bash
+   GOOGLE_DRIVE_API_KEY=your-google-drive-api-key
+   GOOGLE_DRIVE_FOLDER=https://drive.google.com/drive/folders/your-folder-id
    ```
+   `GOOGLE_DRIVE_FOLDER` accepts either the folder link or the bare folder ID.
 
-5. **Optional: set caching headers**  
-   For faster loads, set cache-control headers on the bucket (Supabase > Storage > Policies > Public caching). A week (`max-age=604800`) is a good starting point.
+### What's automatic
 
-JSON structure:
+Add a photo to the folder and it appears on the site. There is nothing else to maintain.
 
-```json
-{
-  "src": "/images/sample-1.svg",
-  "title": "Golden hour",
-  "caption": "Light and texture study",
-  "location": "Santa Monica, CA",
-  "album": "Landscapes",
-  "tags": ["sunset", "coast"],
-  "date": "2023-08-26"
-}
-```
+
+- **Exposure readout:** Camera, focal length, aperture, shutter speed, and ISO come from the metadata Drive reads from the image file. Keep that metadata when you export, or the readout will be empty.
+- **Order:** Photos sort by filename. The home page shows the first three, so rename files to change which ones appear.
+- **Scope:** Only images directly in the folder are listed. Subfolders are ignored.
 
 ## Contact & metadata
 
-- Phone, email, and CTA copy live in `src/components/ConnectBanner.tsx`.
-- Default footer contact info is in `src/components/Footer.tsx`.
-- Update `src/app/layout.tsx` metadata (title, description, `metadataBase`) before going live on your own domain.
+- Phone, email, LinkedIn, and the resume link live in `contact` in `src/data/site.ts`. The footer and "Let's Discuss" form both read from it.
+- The resume is a Google Doc shown on `/resume`. Edit the doc in Drive and the site follows. It must be shared as "Anyone with the link: Viewer", and `contact.resumeDocId` in `src/data/site.ts` holds its ID.
+- Update `src/app/layout.tsx` metadata (title, description, `metadataBase`) if the name or domain changes.
 
 ## Static assets
 
-- Place images in `public/images/`.
-- SVG logos sit directly under `public/`.
-- Tailwind classes expect covers sized roughly 16:9; adjust component styles if you prefer a different aspect ratio.
+- Place images in `public/images/`. Prefer WebP for anything shown through `next/image`.
+- The nav and footer use a text wordmark, and the favicon is `src/app/icon.svg`.
+- Covers crop to a landscape frame of roughly 16:9, anchored to the top of the image, so keep the important part near the top.
+- Use real screenshots and your own photographs, as `DESIGN.md` asks.
 
 With content editing sorted, check out the [Customization Playbook](customization.md) for theming tips and deployment considerations.

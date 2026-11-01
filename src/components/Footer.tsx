@@ -16,7 +16,7 @@ export default function Footer() {
         <div className="am-footer__cols">
           <div className="am-footer__brand">
             <Brand />
-            <p>Data scientist building audit-grade GenAI at AB InBev, and a photographer when the light is good.</p>
+            <p>Senior AI engineer at Oracle building governed agent platforms, and a photographer when the light is good.</p>
           </div>
           <div>
             <h4>Navigation</h4>
@@ -32,12 +32,13 @@ export default function Footer() {
               <li><a href={contact.phoneHref}>{contact.phone}</a></li>
               <li><a href={`mailto:${contact.email}`}>{contact.email}</a></li>
               <li><a href={contact.linkedin} target="_blank" rel="noreferrer">LinkedIn</a></li>
+              <li><a href={contact.github} target="_blank" rel="noreferrer">GitHub</a></li>
             </ul>
           </div>
           <div>
             <h4>Resume</h4>
             <ul>
-              <li><a href={contact.resume} target="_blank" rel="noreferrer">Download PDF</a></li>
+              <li><Link href="/resume">View Resume</Link></li>
             </ul>
           </div>
         </div>

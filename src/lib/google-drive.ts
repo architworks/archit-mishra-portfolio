@@ -6,9 +6,6 @@ export type DrivePhoto = {
   thumbnailUrl: string;
   width?: number;
   height?: number;
-  title: string;
-  alt: string;
-  album?: string;
   exposure: string[];
 };
 
@@ -17,7 +14,6 @@ type DriveFile = {
   name: string;
   mimeType: string;
   thumbnailLink?: string;
-  description?: string;
   imageMediaMetadata?: {
     width?: number;
     height?: number;
@@ -115,18 +111,6 @@ function formatExposure(meta: DriveFile["imageMediaMetadata"]): string[] {
   ].filter((value): value is string => Boolean(value));
 }
 
-// A file's Drive description can read "Title | Album". Without one, the frame number from its name stands in.
-function describePhoto(file: DriveFile): Pick<DrivePhoto, "title" | "album" | "alt"> {
-  const [title, album] = (file.description || "").split("|").map((part) => part.trim());
-  const frame = file.name.match(/(\d{3,})/)?.[1];
-  const fallback = frame ? `Frame ${frame}` : file.name.replace(/(\.[a-z0-9]+)+$/i, "");
-  return {
-    title: title || fallback,
-    album: album || undefined,
-    alt: title ? `Photograph: ${title}` : `Photograph by Archit Mishra, ${fallback}`,
-  };
-}
-
 function toPhoto(file: DriveFile): DrivePhoto {
   const encodedId = encodeURIComponent(file.id);
   const imageUrl = `/api/drive/photo/${encodedId}`;
@@ -140,7 +124,6 @@ function toPhoto(file: DriveFile): DrivePhoto {
     width: file.imageMediaMetadata?.width,
     height: file.imageMediaMetadata?.height,
     exposure: formatExposure(file.imageMediaMetadata),
-    ...describePhoto(file),
   };
 }
 
@@ -167,7 +150,7 @@ export async function listDrivePhotos(options: { revalidate?: number } = {}): Pr
       key: apiKey,
       q: buildFolderQuery(folderId),
       fields:
-        "nextPageToken,files(id,name,mimeType,thumbnailLink,description,imageMediaMetadata(width,height,cameraModel,focalLength,aperture,exposureTime,isoSpeed))",
+        "nextPageToken,files(id,name,mimeType,thumbnailLink,imageMediaMetadata(width,height,cameraModel,focalLength,aperture,exposureTime,isoSpeed))",
       orderBy: "name",
       pageSize: "1000",
       supportsAllDrives: "true",
@@ -192,6 +175,22 @@ export async function listDrivePhotos(options: { revalidate?: number } = {}): Pr
   } while (pageToken);
 
   return photos;
+}
+
+// Only a file shared with "anyone with the link" can be read with an API key.
+export async function isDriveFilePublic(fileId: string): Promise<boolean> {
+  const apiKey = process.env.GOOGLE_DRIVE_API_KEY?.trim();
+  if (!apiKey) return false;
+  try {
+    const params = new URLSearchParams({ key: apiKey, fields: "id", supportsAllDrives: "true" });
+    const response = await fetch(
+      `https://www.googleapis.com/drive/v3/files/${encodeURIComponent(fileId)}?${params.toString()}`,
+      { next: { revalidate: 300 } }
+    );
+    return response.ok;
+  } catch {
+    return false;
+  }
 }
 
 export async function fetchDrivePhoto(fileId: string): Promise<Response> {

@@ -16,6 +16,7 @@ export type ProjectMeta = {
   demoUrl?: string;
   linkOut?: string;
   featured?: boolean;
+  hidden?: boolean;
   order?: number;
   date: string; // ISO string
 };
@@ -45,6 +46,7 @@ export async function getAllProjectsMeta(): Promise<ProjectMeta[]> {
     const { data } = matter(raw);
     const slug = path.basename(file, '.mdx');
     const fm = data as Partial<ProjectMeta> & { date?: string | Date };
+    if (fm.hidden) continue;
     const d = ((): Date => {
       if (typeof fm.date === 'string') return new Date(fm.date);
       const maybeDate = fm.date as unknown;
@@ -97,6 +99,8 @@ export async function getProjectBySlug(slugParam: string): Promise<ProjectConten
     },
     components: mdxComponents as unknown as Record<string, React.ComponentType<unknown>>,
   });
+
+  if (frontmatter.hidden) return null;
 
   const meta: ProjectMeta = {
     slug: slugParam,

@@ -3,7 +3,9 @@ export const contact = {
   phone: "+91 9161251999",
   phoneHref: "tel:+919161251999",
   linkedin: "https://www.linkedin.com/in/marchit/",
-  resume: "/archit-mishra-resume.pdf",
+  github: "https://github.com/architworks",
+  // The resume is a Google Doc. Edit it in Drive and the site's viewer follows.
+  resumeDocId: "12wY0-iDlGTddv2XXD6nLHk0vOkO_alm0WbBvqtjig50",
 };
 
 export const navLeft = [
@@ -20,103 +22,123 @@ export const navRight = [
 
 export const services = [
   {
-    title: "Agent Lab",
-    caption: "Prototyping multi-agent flows that reason, debate, and self-heal.",
-    href: "/projects/agentic-research-notebook",
+    title: "Agent Systems",
+    caption: "Multi-agent systems that plan, delegate, and stop to ask a person.",
+    href: "/projects/kitch",
+    linkLabel: "Open Kitch, a multi-agent project",
     highlights: [
-      "LangGraph experiment harness with visual state playback.",
-      "Custom tool registry for search, policy lookup, and SQL drafting.",
-      "Red-team pack that stress tests hallucinations and tool misuse.",
+      "Coordinators that delegate to least-privilege specialist agents.",
+      "Governed MCP tools that agents reuse across every new workflow.",
+      "Human approval for anything that matters, built into the toolset.",
     ],
   },
   {
-    title: "Evaluation Bench",
+    title: "Evaluation & Guardrails",
     caption: "Keeping prompts and agents honest with measurable yardsticks.",
-    href: "/projects/prompt-ops-lab",
+    href: "/#resume",
+    linkLabel: "See this work in the experience section",
     highlights: [
-      "PromptOps Lab CLI for reproducible regression suites.",
-      "LLM-as-a-judge plus rule-based guardrails wired into CI.",
-      "Latency + cost profilers for multi-model comparison charts.",
+      "LLM-as-a-Judge evals in CI with RAGAS, DeepEval, and promptfoo.",
+      "Policy-as-code checks with OPA and NeMo Guardrails.",
+      "Agent tracing with LangSmith, Langfuse, and OpenTelemetry.",
     ],
   },
   {
-    title: "Creative Stack",
-    caption: "Blending photography, audio, and narrative generation.",
-    href: "/projects/lens-to-language",
+    title: "Creative Side",
+    caption: "Photography, and playful experiments that keep the work fun.",
+    href: "/photography",
+    linkLabel: "Open photography",
     highlights: [],
   },
 ];
 
 export const roles = [
   {
-    org: "AB InBev · Global Risk Management",
-    when: "Bengaluru · Feb 2024 – Present",
-    title: "Data Scientist ·",
-    focus: "IntelX Audit Copilot",
+    org: "Oracle · AI Features in OCI",
+    when: "Bengaluru · Jul 2026 – Present",
+    title: "Senior AI Engineer ·",
+    focus: "Natural-Language Automation",
     summary:
-      "Led a 3–5 person squad to design and deliver IntelX, an audit-grade agentic copilot on Azure microservices.",
-    readout: ["100+ auditors", "3K+ questions a month", "99.8% evaluated accuracy"],
+      "Pitched and leading an enterprise “second brain” where business teams describe a policy change in plain English and get tested, production-ready automation.",
+    readout: ["100k+ monthly RAG users", "LangGraph", "Policy-as-code guardrails"],
     current: true,
   },
   {
-    org: "AB InBev · Global Procurement Audits",
-    when: "Bengaluru + global S2P teams · Jun 2023 – Feb 2024",
+    org: "AB InBev · Global Risk Management",
+    when: "Bengaluru · Aug 2022 – Jul 2026",
     title: "Data Scientist ·",
-    focus: "Source-to-Pay Analytics",
+    focus: "GenAI Compliance Engine",
     summary:
-      "Built GenAI anomaly detection using policy-grounded LLM reasoning on Source-to-Pay transactions.",
-    readout: ["$500M+ reviewed", "$13M leakage recovered"],
+      "Architected a modular GenAI engine that checks ERP data against internal policies and standards like IFRS, with human-in-the-loop feedback from auditors.",
+    readout: ["5M+ transactions overnight", "$15M spend flagged", "50% lower inference cost"],
   },
   {
-    org: "AB InBev · Global Inventory Analytics",
-    when: "Bengaluru · Aug 2022 – Jun 2023",
-    title: "Associate Data Scientist ·",
-    focus: "Supply Chain",
+    org: "AB InBev · Internal Audit",
+    when: "Same role, Global Risk Management",
+    title: "Data Scientist ·",
+    focus: "GenAI Audit Platform",
     summary:
-      "Automated SAP RFC to Airflow to Azure Analysis Services pipelines and executive KPI packs for SteerCo.",
-    readout: ["$7B inventory covered", "$1B reduction", "$60M working capital"],
+      "Built a LangGraph multi-agent system with a plan-and-execute supervisor, specialist sub-agents, and text-to-SQL over terabytes of company data.",
+    readout: ["Audit prep: 2 weeks to 2 days", "99.8% evaluated accuracy", "15K+ monthly queries"],
+  },
+  {
+    org: "AB InBev · Procurement & Supply Chain",
+    when: "Same role, Global Risk Management",
+    title: "Data Scientist ·",
+    focus: "Global Audits",
+    summary:
+      "Unified inventory data across 130+ countries with SAP-to-Databricks pipelines, and applied LLM-based checks across procurement spend.",
+    readout: ["$13M cost savings realized", "$1B inventory reduction", "Reported to the Board"],
   },
 ];
 
 export const hireStats = [
-  { value: "4K+", label: "Hours saved yearly" },
-  { value: "$13M", label: "Leakage recovered" },
+  { value: "$13M", label: "Cost savings realized" },
+  { value: "$1B", label: "Inventory reduction driven" },
   { value: "99.8%", label: "Evaluated accuracy" },
-  { value: "130", label: "Markets supported" },
+  { value: "100k+", label: "Monthly users served" },
 ];
 
 export const results = [
   {
-    figure: "99.8%",
-    source: ["IntelX Audit Copilot", "AB InBev Global Risk"],
+    figure: "$15M",
+    source: ["GenAI Compliance Engine", "AB InBev"],
     summary:
-      "Evaluated accuracy across 3K+ monthly questions from 100+ auditors, saving about 4K people-hours every year.",
-    readout: ["130 markets", "1TB+ evidence"],
+      "Business value from non-compliant procurement spend flagged across 5M+ SAP transactions processed overnight, plus $2.2M in improper payouts prevented.",
+    readout: ["150k employees covered", "~40% fewer false positives"],
   },
   {
     figure: "$13M",
-    source: ["Source-to-Pay Analytics", "AB InBev Procurement Audits"],
+    source: ["Procurement Audits", "AB InBev"],
     summary:
-      "Leakage recovered across payment-term mismatches, early-payment costs, credit recoveries, and contract gaps.",
-    readout: ["$500M+ transactions"],
+      "Cost savings realized by LLM-based checks that caught payment-term mismatches and accounting errors manual sampling missed.",
+    readout: ["$500M+ spend reviewed"],
   },
   {
     figure: "$1B",
-    source: ["Inventory Analytics", "AB InBev Supply Chain"],
+    source: ["Supply Chain Audits", "AB InBev"],
     summary:
-      "Surplus and overbuy reduction across $7B of global inventory, with $60M of working capital recovered.",
-    readout: ["Monthly SteerCo"],
+      "Inventory reduction and $60M of working capital, driven by surplus insights from $7B of unified inventory data and reported to the Board.",
+    readout: ["130+ countries"],
+  },
+  {
+    figure: "99.8%",
+    source: ["GenAI Audit Platform", "AB InBev"],
+    summary:
+      "Evaluated accuracy across 15K+ monthly queries, cutting audit prep from 2 weeks to 2 days.",
+    readout: ["RAGAS evals", "30% better precision"],
   },
 ];
 
 export const skills = [
-  "RAG",
+  "Agents",
   "LangGraph",
-  "Prompt Ops",
-  "Azure OpenAI",
+  "RAG",
+  "MCP",
   "Evaluations",
-  "PyTorch",
-  "Airflow",
+  "Guardrails",
+  "Azure OpenAI",
+  "Gemini",
   "PySpark",
   "Next.js",
   "Photography",

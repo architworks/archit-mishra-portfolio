@@ -1,36 +1,45 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Archit Mishra's Portfolio
 
-## Getting Started
+The personal site of Archit Mishra, a data scientist and photographer. It's a Next.js 15 App Router app with project writeups in MDX and a photography gallery served from Google Drive.
 
-First, run the development server:
+## Run it locally
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Copy the example environment file, then add your Google Drive API key and folder. The site runs without them, but the photography gallery won't load.
+
+```bash
+cp .env.example .env.local
+```
+
+Start the development server at [http://localhost:3000](http://localhost:3000):
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Where things live
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| To change | Edit |
+| --------- | ---- |
+| Contact details, navigation, services, roles, stats, results, skills | `src/data/site.ts` |
+| Color, type, spacing, and radius tokens | `src/app/globals.css` |
+| Component styles (`am-*` classes) | `src/app/design-system.css` |
+| Projects | `content/projects/*.mdx`, starting from `content/projects/TEMPLATE.mdx` |
+| Page title, description, and site URL | `src/app/layout.tsx` |
+| Images and the resume PDF | `public/` |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Read `DESIGN.md` before changing the look of the site. It links to the design system and lists the rules that matter most.
 
-## Learn More
+## Documentation
 
-To learn more about Next.js, take a look at the following resources:
+The guides are in `docs/`, and `mkdocs.yml` publishes them as a site:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- [Getting Started](docs/getting-started.md): setup, scripts, and project layout.
+- [Architecture Tour](docs/architecture.md): routes, data flow, and components.
+- [Content Management](docs/content.md): projects, site copy, and photos.
+- [Customization Playbook](docs/customization.md): theming, new sections, and deployment.

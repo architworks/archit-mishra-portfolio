@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Readout from "@/components/Readout";
@@ -92,14 +92,13 @@ function Lightbox({
           <button className="am-icon-btn" type="button" aria-label="Previous photo" onClick={showPrevious}><ArrowLeft /></button>
         ) : <span />}
         <div className="am-lightbox__frame">
-          <Image src={photo.imageUrl} alt={photo.alt} fill sizes="100vw" style={{ objectFit: "contain" }} priority />
+          <Image src={photo.imageUrl} alt={`Photograph ${index + 1} by Archit Mishra`} fill sizes="100vw" style={{ objectFit: "contain" }} priority />
         </div>
         {photos.length > 1 ? (
           <button className="am-icon-btn" type="button" aria-label="Next photo" onClick={showNext}><ArrowRight /></button>
         ) : <span />}
       </div>
       <div className="am-lightbox__cap">
-        <b>{photo.title}</b>
         <Readout items={photo.exposure} />
       </div>
     </div>
@@ -109,7 +108,6 @@ function Lightbox({
 export default function GoogleDriveGallery() {
   const [state, setState] = useState<GalleryState>({ status: "loading", photos: [] });
   const [attempt, setAttempt] = useState(0);
-  const [album, setAlbum] = useState<string | null>(null);
   const [activeId, setActiveId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -135,31 +133,18 @@ export default function GoogleDriveGallery() {
     };
   }, [attempt]);
 
-  // Album and open photo live in the URL so a view can be shared.
+  // The open photo lives in the URL so a view can be shared.
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    setAlbum(params.get("album"));
-    setActiveId(params.get("photo"));
+    setActiveId(new URLSearchParams(window.location.search).get("photo"));
   }, []);
 
-  const albums = useMemo(
-    () => [...new Set(state.photos.map((photo) => photo.album).filter((value): value is string => Boolean(value)))],
-    [state.photos]
-  );
-  const visible = useMemo(
-    () => (album ? state.photos.filter((photo) => photo.album === album) : state.photos),
-    [album, state.photos]
-  );
+  const visible = state.photos;
   const activeIndex = visible.findIndex((photo) => photo.id === activeId);
 
   const openPhoto = useCallback((id: string | null) => {
     setActiveId(id);
     setUrlParam("photo", id);
   }, []);
-  const chooseAlbum = (value: string | null) => {
-    setAlbum(value);
-    setUrlParam("album", value);
-  };
   const closeViewer = useCallback(() => openPhoto(null), [openPhoto]);
   const changeViewer = useCallback((index: number) => openPhoto(visible[index].id), [openPhoto, visible]);
 
@@ -197,44 +182,26 @@ export default function GoogleDriveGallery() {
 
   return (
     <>
-      {albums.length > 1 && (
-        <div className="am-chips" role="group" aria-label="Filter by album" style={{ marginBottom: 32 }}>
-          <button className="am-chip" type="button" aria-pressed={!album} onClick={() => chooseAlbum(null)}>All</button>
-          {albums.map((name) => (
-            <button key={name} className="am-chip" type="button" aria-pressed={album === name} onClick={() => chooseAlbum(name)}>
-              {name}
-            </button>
-          ))}
-        </div>
-      )}
-
       {visible.length ? (
         <div className="am-gallery-grid" data-count={visible.length < 3 ? visible.length : undefined}>
           {visible.map((photo, index) => (
             <figure key={photo.id} className={index === 0 && visible.length >= 3 ? "am-span-2" : undefined}>
-              <button className="am-gallery-item" type="button" aria-label={`Open ${photo.title}`} onClick={() => openPhoto(photo.id)}>
+              <button className="am-gallery-item" type="button" aria-label={`Open photo ${index + 1}`} onClick={() => openPhoto(photo.id)}>
                 <Image
                   src={photo.imageUrl}
-                  alt={photo.alt}
+                  alt={`Photograph ${index + 1} by Archit Mishra`}
                   fill
                   sizes={index === 0 ? "(max-width: 767px) 100vw, 860px" : "(max-width: 767px) 100vw, 420px"}
                   priority={index === 0}
                 />
               </button>
-              <figcaption>
-                <b>{photo.title}</b>
-                <Readout items={photo.exposure} />
-              </figcaption>
+              {photo.exposure.length > 0 && (
+                <figcaption><Readout items={photo.exposure} /></figcaption>
+              )}
             </figure>
           ))}
         </div>
-      ) : (
-        <div className="am-notice">
-          <h3>No Photos in This Album</h3>
-          <p>Nothing here so far. See every photograph instead.</p>
-          <button className="am-btn am-btn--ghost am-btn--sm" type="button" onClick={() => chooseAlbum(null)}>Show All Photos</button>
-        </div>
-      )}
+      ) : null}
 
       {activeIndex >= 0 && (
         <Lightbox photos={visible} index={activeIndex} onChange={changeViewer} onClose={closeViewer} />

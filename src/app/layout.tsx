@@ -28,11 +28,11 @@ const lufga = localFont({
 
 export const metadata: Metadata = {
   title: {
-    default: "Archit Mishra · Data Scientist and Photographer",
+    default: "Archit Mishra · AI Engineer and Photographer",
     template: "%s · Archit Mishra",
   },
   description:
-    "Archit Mishra builds audit-grade GenAI at AB InBev and photographs when the light is good. Projects, measured results, and photography.",
+    "Archit Mishra is a senior AI engineer at Oracle who builds governed agent platforms and photographs when the light is good. Projects, results, and photography.",
   metadataBase: new URL("https://www.archit-mishra.com"),
 };
 

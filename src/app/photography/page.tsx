@@ -7,7 +7,7 @@ export default function PhotographyPage() {
     <div className="am-wrap am-page">
       <div className="am-gallery-head">
         <h1 className="am-h2">From My <em className="am-accent">Lens</em></h1>
-        <p>Every frame with its exposure, the same way the work on this site carries its results.</p>
+        <p>Photographs, with the camera settings behind them when the file has them.</p>
       </div>
       <GoogleDriveGallery />
     </div>

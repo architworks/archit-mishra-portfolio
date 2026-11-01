@@ -27,7 +27,7 @@ export default function Navbar() {
   useEffect(() => {
     if (pathname !== "/") return;
 
-    const elements = ["home", "about", "resume", "hire", "projects", "results", "contact", "photography"]
+    const elements = ["home", "about", "resume", "why", "projects", "results", "contact", "photography"]
       .map((id) => document.getElementById(id))
       .filter((el): el is HTMLElement => Boolean(el));
 

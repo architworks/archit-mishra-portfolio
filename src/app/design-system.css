@@ -139,10 +139,10 @@ button.am-chip, a.am-chip { cursor: pointer; min-height: 44px; }
 /* Nav */
 .am-nav { position: sticky; top: 12px; z-index: 20; padding-inline: var(--gutter); }
 .am-nav__bar {
-  --focus: var(--focus-on-band);
+  --focus: var(--nav-focus);
   display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 16px;
   max-width: 1296px; min-height: 60px; margin-inline: auto; padding: 6px;
-  border-radius: 999px; background: var(--band); color: var(--band-ink);
+  border-radius: 999px; background: var(--nav); color: var(--nav-ink);
 }
 .am-nav__group { display: flex; align-items: center; gap: 4px; min-width: 0; }
 .am-nav__group--end { justify-content: flex-end; }
@@ -160,10 +160,12 @@ button.am-chip, a.am-chip { cursor: pointer; min-height: 44px; }
 }
 .am-icon-btn:active { transform: scale(0.95); }
 .am-icon-btn svg { width: 20px; height: 20px; }
+.am-nav .am-icon-btn { background: var(--nav-tint); }
 .am-nav__menu { display: none; }
 @media (hover: hover) and (pointer: fine) {
-  .am-nav__link:not([aria-current="page"]):hover { background: rgba(255, 255, 255, 0.1); }
+  .am-nav__link:not([aria-current="page"]):hover { background: var(--nav-tint); }
   .am-icon-btn:hover { background: rgba(255, 255, 255, 0.2); }
+  .am-nav .am-icon-btn:hover { background: var(--nav-tint-strong); }
 }
 @media (max-width: 1179px) {
   .am-nav__bar { grid-template-columns: 1fr auto; min-height: 56px; padding-inline: 6px; }
@@ -172,9 +174,9 @@ button.am-chip, a.am-chip { cursor: pointer; min-height: 44px; }
   .am-nav__brand { font-size: 20px; }
 }
 .am-sheet-nav {
-  --focus: var(--focus-on-band);
+  --focus: var(--nav-focus);
   display: grid; gap: 4px; margin-top: 8px; padding: 12px; border-radius: 32px;
-  background: var(--band); color: var(--band-ink); box-shadow: var(--shadow-float);
+  background: var(--nav); color: var(--nav-ink); box-shadow: var(--shadow-float);
   transform-origin: top right;
 }
 .am-sheet-nav .am-nav__link { min-height: 52px; }
@@ -355,7 +357,7 @@ html.dark .am-timeline__dot::after { background: var(--ink-subtle); }
 
 @media (min-width: 1100px) { .am-nb { white-space: nowrap; } }
 
-/* Why Hire Me */
+/* Why Work With Me */
 .am-hire { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); align-items: center; gap: clamp(32px, 5vw, 72px); padding: clamp(32px, 5vw, 72px); border-radius: var(--radius-xl); background: var(--surface); }
 .am-hire__figure { position: relative; aspect-ratio: 1 / 1.02; }
 .am-hire__arch { position: absolute; left: 12%; right: 12%; top: 16%; bottom: 0; border-radius: 180px 180px 48px 48px; background: var(--arc); }
@@ -583,3 +585,10 @@ html.dark .am-theme-icon--sun { display: none; }
   .am-hero__stage { height: clamp(380px, min(45vw, calc(100svh - 25.4vw)), 650px); }
 }
 @media (max-width: 767px) { .am-hero__stage { margin-top: 0; } }
+/* Get in Touch: inverse of its surface, with the arrow in an orange disc. */
+.am-btn--touch { gap: 14px; min-height: 60px; padding: 8px 8px 8px 28px; background: var(--touch-bg, var(--nav)); color: var(--touch-ink, var(--nav-ink)); }
+.am-footer .am-btn--touch { --touch-bg: var(--sheet); --touch-ink: var(--sheet-ink); }
+.am-btn__dot { display: grid; place-items: center; flex: none; width: 44px; height: 44px; border-radius: 50%; background: var(--accent); color: var(--on-accent); transition: transform var(--dur-state) var(--ease-out), background-color var(--dur-state) ease; }
+@media (hover: hover) and (pointer: fine) {
+  .am-btn--touch:hover .am-btn__dot { background: var(--accent-hover); transform: scale(1.06); }
+}

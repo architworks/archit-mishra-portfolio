@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Brand } from "@/components/Navbar";
-import { ArrowUpRight } from "@/components/icons";
+import GetInTouch from "@/components/GetInTouch";
 import { contact, navLeft, navRight } from "@/data/site";
 
 export default function Footer() {
@@ -9,9 +9,7 @@ export default function Footer() {
       <div className="am-wrap">
         <div className="am-footer__cta">
           <p>Let’s Connect There</p>
-          <a className="am-btn am-btn--primary" href={`mailto:${contact.email}?subject=Working%20with%20Archit`}>
-            Hire Me <ArrowUpRight />
-          </a>
+          <GetInTouch />
         </div>
         <div className="am-footer__cols">
           <div className="am-footer__brand">

@@ -20,6 +20,11 @@
   --arc: #feb273;
   --doodle: #4f4088;
   --doodle-on-arc: #4f4088;
+  --nav: #171717;
+  --nav-ink: #ffffff;
+  --nav-tint: rgba(255,255,255,0.1);
+  --nav-tint-strong: rgba(255,255,255,0.2);
+  --nav-focus: #ffffff;
   --navy: #1d2939;
   --on-navy: #ffffff;
   --band: #171717;
@@ -74,6 +79,11 @@ html.dark {
   --focus: #fcfcfd;
   --danger: #fda29b;
   --success: #75e0a7;
+  --nav: #fcfcfd;
+  --nav-ink: #171717;
+  --nav-tint: rgba(23,23,23,0.08);
+  --nav-tint-strong: rgba(23,23,23,0.14);
+  --nav-focus: #171717;
   color-scheme: dark;
 }
 

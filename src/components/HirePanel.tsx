@@ -1,10 +1,10 @@
 import Image from "next/image";
-import { ArrowUpRight } from "@/components/icons";
-import { contact, hireStats } from "@/data/site";
+import GetInTouch from "@/components/GetInTouch";
+import { hireStats } from "@/data/site";
 
 export default function HirePanel() {
   return (
-    <section className="am-section am-section--flush" id="hire">
+    <section className="am-section am-section--flush" id="why">
       <div className="am-wrap">
         <div className="am-hire">
           <div className="am-hire__figure">
@@ -18,7 +18,7 @@ export default function HirePanel() {
             />
           </div>
           <div>
-            <h2 className="am-h2">Why <em className="am-accent">Hire Me</em>?</h2>
+            <h2 className="am-h2">Why <em className="am-accent">Work With Me</em>?</h2>
             <p className="am-hire__lede">
               I help teams trust AI in production, shipping agents with the guardrails, evals, and observability that turn a demo into measurable business value.
             </p>
@@ -30,9 +30,7 @@ export default function HirePanel() {
                 </div>
               ))}
             </dl>
-            <a className="am-btn am-btn--ghost" href={`mailto:${contact.email}?subject=Working%20with%20Archit`}>
-              Hire Me <ArrowUpRight />
-            </a>
+            <GetInTouch />
           </div>
         </div>
       </div>

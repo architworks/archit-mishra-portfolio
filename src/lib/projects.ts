@@ -29,7 +29,7 @@ const CONTENT_DIR = path.join(process.cwd(), 'content', 'projects');
 export async function listProjectFiles(): Promise<string[]> {
   try {
     const files = await fs.readdir(CONTENT_DIR);
-    return files.filter((f) => f.endsWith('.mdx'));
+    return files.filter((f) => f.endsWith('.mdx') && f !== 'TEMPLATE.mdx');
   } catch {
     return [];
   }

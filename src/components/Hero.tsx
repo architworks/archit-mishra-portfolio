@@ -1,157 +1,112 @@
 "use client";
-import { motion } from "framer-motion";
-import Link from "next/link";
 import Image from "next/image";
-import profileJson from "@/data/profile.json" assert { type: "json" };
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
+import HeroDoodles from "@/components/HeroDoodles";
+import { ArrowUpRight, QuoteMark, Spark, SparkLarge } from "@/components/icons";
 
-type Profile = {
-  image?: string;
-  alt?: string;
-};
+type Role = "projects" | "photo";
 
-const profile = profileJson as Profile;
-
-function QuoteBlock() {
-  return (
-    <motion.blockquote
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6 }}
-      className="relative max-w-[360px] rounded-2xl bg-white/95 dark:bg-white/5 ring-1 ring-zinc-200/80 dark:ring-white/10 p-5 shadow-sm backdrop-blur-sm"
-    >
-      <span
-        aria-hidden
-        className="absolute -left-3 -top-3 inline-flex h-10 w-10 items-center justify-center rounded-full bg-orange-500/10 text-orange-600 ring-1 ring-orange-500/20"
-      >
-        <span className="text-9xl leading-none">“</span>
-      </span>
-      <p className="text-lg sm:text-xl font-semibold text-[#111112] dark:text-white">
-        I build intelligent products with LLMs and data.
-      </p>
-      <p className="mt-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
-        Specializing in RAG, agents, prompt engineering and full-stack ML systems. I love shipping delightful, measurable experiences.
-      </p>
-    </motion.blockquote>
-  );
-}
-
-function HeroVisual() {
-  return (
-    <div className="relative">
-      <motion.div
-        initial={{ opacity: 0, scale: 0.96 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.7, delay: 0.05 }}
-        className="relative mx-auto -mt-10 sm:-mt-14 lg:-mt-16 h-[588px] sm:h-[739px] lg:h-[640px] w-full max-w-[720px]"
-      >
-        <motion.div
-          initial={{ opacity: 0, y: -6 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.05 }}
-          className="absolute left-1/2 -translate-x-1/2 top-[18%] z-30"
-        >
-          <div className="relative inline-flex">
-            <span className="rounded-full border border-zinc-300 bg-white px-5 py-1.5 text-sm font-semibold text-zinc-900 shadow-sm dark:border-white/40 dark:bg-white dark:text-zinc-900">
-              Hello!
-            </span>
-            <svg
-              className="absolute -top-4 right-1 h-6 w-6 text-orange-400"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-            >
-              <path d="M6 20c4-6.5 7.5-7.5 12-12" />
-              <path d="M10 22c2.5-3.5 5-5.5 9-9" />
-            </svg>
-          </div>
-        </motion.div>
-        {/* Headline behind the cutout, in front of the arc */}
-        <motion.div
-          aria-hidden
-          initial={{ opacity: 0, y: -8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className="pointer-events-none select-none absolute top-[27%] left-1/2 -translate-x-1/2 
-                     z-20 text-center font-extrabold tracking-tight leading-[0.92]
-                     mix-blend-normal w-auto text-zinc-900 dark:text-white"
-        >
-          <span className="hero-headline block text-[clamp(2rem,5vw,3.5rem)] whitespace-nowrap">
-            I’m Archit,
-          </span>
-          <span className="hero-headline block text-[clamp(2rem,5vw,3.5rem)] whitespace-nowrap">
-            Data Scientist
-          </span>
-        </motion.div>
-        {/* Orange arc behind the hero */}
-        <div
-          aria-hidden
-          className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[576px] sm:w-[648px] lg:w-[720px] aspect-[2/1] z-10 pointer-events-none"
-        >
-          <svg viewBox="0 0 200 100" preserveAspectRatio="xMidYMax meet" className="w-full h-full">
-            <path d="M0,100 A100,100 0 0 1 200,100 L200,100 L0,100 Z" fill="#fbbf24" />
-          </svg>
-        </div>
-
-        {/* Cutout image - centered with arc */}
-        <div className="absolute top-0 left-1/2 -translate-x-[60%] z-30 w-[576px] sm:w-[648px] lg:w-[720px] h-full pt-4 px-4 pb-0">
-          <div className="relative h-full w-full">
-            <Image
-              src={profile.image || "/images/hero-portrait.svg"}
-              alt={profile.alt || "Portrait"}
-              fill
-              priority
-              className="object-contain object-bottom [background:transparent!important]"
-              sizes="(min-width: 1024px) 520px, 90vw"
-            />
-          </div>
-        </div>
-
-        {/* CTA buttons over the arc, centered near bottom */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.15 }}
-          className="absolute left-1/2 -translate-x-1/2 bottom-16 sm:bottom-20 lg:bottom-16 z-40 flex flex-col sm:flex-row items-center justify-center gap-3"
-        >
-          <Link
-            href="/projects"
-            className="btn-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-          >
-            View Projects
-          </Link>
-          <a
-            href="#skills"
-            className="rounded-full px-5 py-3 font-medium text-zinc-900 dark:text-zinc-900 ring-1 ring-zinc-300/70 dark:ring-white/15 bg-white dark:bg-white transition-colors hover:bg-zinc-100 dark:hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-          >
-            Skills & Resume
-          </a>
-        </motion.div>
-      </motion.div>
-    </div>
-  );
-}
+const portfolios: { role: Role; href: string; label: string }[] = [
+  { role: "projects", href: "/projects", label: "Projects" },
+  { role: "photo", href: "/photography", label: "Photography" },
+];
 
 export default function Hero() {
-  return (
-    <section id="home" className="relative isolate overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-0 sm:pt-2 pb-0">
-        {/* Desktop layout */}
-        <div className="relative hidden lg:block">
-          <HeroVisual />
-          <div className="absolute left-0 top-40">
-            <QuoteBlock />
-          </div>
-        </div>
+  const [role, setRole] = useState<Role>("projects");
+  const [doodles, setDoodles] = useState(false);
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
 
-        {/* Mobile/Tablet */}
-        <div className="lg:hidden space-y-8">
-          <div className="mx-auto max-w-[360px] pt-4">
-            <QuoteBlock />
-          </div>
-          <HeroVisual />
-        </div>
+  // The doodles arrive once the headline has left the view, while the stage is still on screen.
+  useEffect(() => {
+    const title = titleRef.current;
+    const stage = stageRef.current;
+    if (!title || !stage) return;
+
+    let titleVisible = 1;
+    let stageVisible = 1;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.target === title) titleVisible = entry.intersectionRatio;
+          else stageVisible = entry.intersectionRatio;
+        }
+        setDoodles(titleVisible < 0.2 && stageVisible > 0.55);
+      },
+      { rootMargin: "-88px 0px 0px 0px", threshold: [0, 0.1, 0.2, 0.3, 0.5, 0.55, 0.6, 0.75, 1] }
+    );
+    observer.observe(title);
+    observer.observe(stage);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <section className="am-hero" id="home" data-role={role} data-doodles={doodles}>
+      <div className="am-hero__head">
+        <p className="am-hello" style={{ margin: 0 }}>
+          Hello!
+          <span className="am-hello__spark"><Spark /></span>
+        </p>
+        <h1 ref={titleRef} className="am-hero__title">
+          <span className="am-sr">I’m Archit, Data Scientist and Photographer</span>
+          <span aria-hidden="true">
+            I’m <em className="am-accent">Archit</em>,<br />
+            <span className="am-role">
+              <span>Data Scientist</span>
+              <span>Photographer</span>
+            </span>
+          </span>
+          <span className="am-hero__spark"><SparkLarge /></span>
+        </h1>
+      </div>
+
+      <div ref={stageRef} className="am-hero__stage">
+        <div className="am-hero__arc" />
+        <HeroDoodles />
+        <Image
+          className="am-hero__cutout"
+          src="/images/archit-cutout.webp"
+          alt="Archit Mishra in sunglasses, a navy blazer and a red shirt"
+          width={1585}
+          height={1400}
+          sizes="(max-width: 767px) 110vw, 740px"
+          priority
+        />
+        <nav
+          className="am-capsule"
+          aria-label="Choose a portfolio"
+          onPointerLeave={() => setRole("projects")}
+          onBlur={(event) => {
+            if (!event.currentTarget.contains(event.relatedTarget)) setRole("projects");
+          }}
+        >
+          <span className="am-capsule__thumb" />
+          {portfolios.map((portfolio) => (
+            <Link
+              key={portfolio.role}
+              href={portfolio.href}
+              data-role={portfolio.role}
+              onPointerEnter={(event) => {
+                if (event.pointerType === "mouse") setRole(portfolio.role);
+              }}
+              onFocus={() => setRole(portfolio.role)}
+            >
+              {portfolio.label} <ArrowUpRight />
+            </Link>
+          ))}
+        </nav>
+      </div>
+
+      <div className="am-hero__flanks">
+        <blockquote className="am-hero__quote" style={{ margin: 0 }}>
+          <QuoteMark />
+          <p>I build intelligent products with LLMs and data.</p>
+        </blockquote>
+        <p className="am-hero__stat" style={{ margin: 0 }}>
+          <strong>4+ Years</strong>
+          <span>Shipping data and GenAI at AB InBev</span>
+        </p>
       </div>
     </section>
   );

@@ -1,17 +1,15 @@
 import GoogleDriveGallery from "@/components/GoogleDriveGallery";
 
-export const metadata = { title: "Photography · GenAI DS" };
+export const metadata = { title: "Photography" };
 
 export default function PhotographyPage() {
   return (
-    <div className="py-12 sm:py-16">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6">
-        <h1 className="text-3xl font-bold">Photography</h1>
-
-        <div className="mt-8">
-          <GoogleDriveGallery />
-        </div>
+    <div className="am-wrap am-page">
+      <div className="am-gallery-head">
+        <h1 className="am-h2">From My <em className="am-accent">Lens</em></h1>
+        <p>Every frame with its exposure, the same way the work on this site carries its results.</p>
       </div>
+      <GoogleDriveGallery />
     </div>
   );
 }

@@ -3,15 +3,15 @@ import { results } from "@/data/site";
 
 export default function ResultsBand() {
   return (
-    <section className="am-band" id="results">
-      <div className="am-wrap" style={{ paddingInline: 0 }}>
-        <div className="am-sec-head am-sec-head--center" style={{ paddingInline: "var(--gutter)" }}>
-          <h2 className="am-h2">Results That Speak<br />for <em className="am-accent">Themselves</em></h2>
+    <section className="am-band am-band--compact" id="results">
+      <div className="am-wrap">
+        <div className="am-sec-head am-sec-head--center">
+          <h2 className="am-h2">Results That Speak for <em className="am-accent">Themselves</em></h2>
           <p style={{ color: "var(--band-ink)" }}>
             Measured outcomes from production work, reported as evaluated or audited at the time.
           </p>
         </div>
-        <div className="am-results" tabIndex={0} role="region" aria-label="Results">
+        <div className="am-results">
           {results.map((result) => (
             <article key={result.figure} className="am-result">
               <div className="am-result__top">

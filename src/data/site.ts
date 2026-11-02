@@ -6,6 +6,7 @@ export const contact = {
   github: "https://github.com/architworks",
   // Whatever document is in this Drive folder is the resume. The newest file wins.
   resumeFolderId: "18Aa2DTh-_2sctaVyjnSh9FkRtV1zPGHq",
+  resumeDownload: "/api/drive/resume",
 };
 
 export const navLeft = [
@@ -92,11 +93,23 @@ export const roles = [
   },
 ];
 
-export const hireStats = [
-  { value: "$13M", label: "Cost savings realized" },
-  { value: "$1B", label: "Inventory reduction driven" },
-  { value: "99.8%", label: "Evaluated accuracy" },
-  { value: "100k+", label: "Monthly users served" },
+export const strengths = [
+  {
+    title: "From Pitch to Production",
+    summary: "I find the problem worth solving, make the case for it, and stay through launch.",
+  },
+  {
+    title: "Built to Be Trusted",
+    summary: "Evals, guardrails, and human approval go in from the start, not after the demo.",
+  },
+  {
+    title: "The Whole Stack",
+    summary: "Data pipelines, agents, evaluation, and the interface people actually use.",
+  },
+  {
+    title: "Fluent With the Business",
+    summary: "I work directly with end users, business teams, and leadership, so what I build fits how it actually gets used. I’ve reported up to the Board.",
+  },
 ];
 
 export const results = [

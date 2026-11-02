@@ -21,7 +21,8 @@ app/
 │   └── page.tsx       # /photography - gallery with album filters + lightbox
 └── api/drive/
     ├── photos/        # GET /api/drive/photos - lists the folder as JSON
-    └── photo/[id]/    # GET /api/drive/photo/<id> - streams one image from Drive
+    ├── photo/[id]/    # GET /api/drive/photo/<id> - streams one image from Drive
+    └── resume/        # GET /api/drive/resume - downloads the resume as a file
 ```
 
 ### `src/app/layout.tsx`
@@ -67,11 +68,11 @@ export default async function Home() {
 
 | Export | Used by |
 | ------ | ------- |
-| `contact` | `Discuss`, `Footer`, `HirePanel` |
+| `contact` | `Discuss`, `Experience`, `Footer`, `GetInTouch` |
 | `navLeft`, `navRight` | `Navbar`, `Footer` |
 | `services` | `ServicesBand` |
 | `roles` | `Experience` |
-| `hireStats` | `HirePanel` |
+| `strengths` | `HirePanel` |
 | `results` | `ResultsBand` |
 | `skills` | `Marquee` |
 
@@ -98,7 +99,7 @@ Headlines and one-off sentences stay in the component that shows them.
 
 ### Static assets
 
-- Images live under `public/images/`, and the resume is the document in a shared Drive folder, embedded on `/resume`.
+- Images live under `public/images/`. The resume is the document in a shared Drive folder: `/resume` embeds it, and `/api/drive/resume` serves it as a download from the site's own domain.
 - Project covers and page images go through `next/image`.
 
 ## Component highlights
@@ -108,7 +109,7 @@ Headlines and one-off sentences stay in the component that shows them.
 | `Hero` | Landing section with the portrait and portfolio switch | Reveals `HeroDoodles` once the headline scrolls away |
 | `ServicesBand` | "What I Build" cards on a dark band (`#about`) | Each card has a diagram or photograph |
 | `Experience` | Timeline of roles (`#resume`) | Each role carries a `Readout` of real numbers |
-| `HirePanel` | "Why Hire Me?" stats and email button (`#hire`) | Reads `hireStats` and `contact` |
+| `HirePanel` | "Why Work With Me?" points and email button (`#why`) | Reads `strengths`; the numbers stay in `ResultsBand` |
 | `ProjectsShowcase` | Scrolling rail of featured projects (`#projects`) | Accepts `ProjectMeta[]`, renders `ProjectCover` |
 | `ResultsBand` | Measured outcomes on a dark band (`#results`) | Fills the slot where testimonials would go |
 | `Discuss` | Email field that opens a mail draft (`#contact`) | Validates the address, then opens a `mailto:` link |

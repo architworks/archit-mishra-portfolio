@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Readout from "@/components/Readout";
-import { roles } from "@/data/site";
+import { contact, roles } from "@/data/site";
 
 export default function Experience() {
   return (
@@ -29,6 +29,7 @@ export default function Experience() {
           ))}
         </ol>
         <div className="am-timeline-more">
+          <a className="am-btn am-btn--primary am-btn--sm" href={contact.resumeDownload}>Download Resume</a>
           <Link className="am-btn am-btn--ghost am-btn--sm" href="/resume">View Full Resume</Link>
         </div>
       </div>

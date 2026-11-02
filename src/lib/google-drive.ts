@@ -179,47 +179,72 @@ export async function listDrivePhotos(options: { revalidate?: number } = {}): Pr
 
 export type DriveDocument = {
   previewUrl: string;
-  downloadUrl: string;
   openUrl: string;
 };
 
-// Google Docs and uploaded files (PDF, Word) use different viewer and download URLs.
+// Google Docs and uploaded files (PDF, Word) use different viewer URLs.
 function toDriveDocument(id: string, mimeType: string): DriveDocument {
   const encodedId = encodeURIComponent(id);
   if (mimeType === "application/vnd.google-apps.document") {
     const doc = `https://docs.google.com/document/d/${encodedId}`;
-    return { previewUrl: `${doc}/preview`, downloadUrl: `${doc}/export?format=pdf`, openUrl: `${doc}/view` };
+    return { previewUrl: `${doc}/preview`, openUrl: `${doc}/view` };
   }
   const file = `https://drive.google.com/file/d/${encodedId}`;
-  return {
-    previewUrl: `${file}/preview`,
-    downloadUrl: `https://drive.google.com/uc?export=download&id=${encodedId}`,
-    openUrl: `${file}/view`,
-  };
+  return { previewUrl: `${file}/preview`, openUrl: `${file}/view` };
 }
 
-// Returns the most recently changed file in a folder shared with "anyone with the link".
+// The most recently changed file in a folder shared with "anyone with the link".
+async function findLatestDriveFile(folderId: string, apiKey: string): Promise<DriveFile | undefined> {
+  const params = new URLSearchParams({
+    key: apiKey,
+    q: `'${folderId}' in parents and trashed = false and mimeType != 'application/vnd.google-apps.folder'`,
+    fields: "files(id,name,mimeType)",
+    orderBy: "modifiedTime desc",
+    pageSize: "1",
+    supportsAllDrives: "true",
+    includeItemsFromAllDrives: "true",
+  });
+  const response = await fetch(`https://www.googleapis.com/drive/v3/files?${params.toString()}`, {
+    next: { revalidate: 60 },
+  });
+  return (await parseDriveResponse(response)).files?.[0];
+}
+
 export async function getLatestDriveDocument(folderId: string): Promise<DriveDocument | null> {
   const apiKey = process.env.GOOGLE_DRIVE_API_KEY?.trim();
   if (!apiKey) return null;
   try {
-    const params = new URLSearchParams({
-      key: apiKey,
-      q: `'${folderId}' in parents and trashed = false and mimeType != 'application/vnd.google-apps.folder'`,
-      fields: "files(id,mimeType)",
-      orderBy: "modifiedTime desc",
-      pageSize: "1",
-      supportsAllDrives: "true",
-      includeItemsFromAllDrives: "true",
-    });
-    const response = await fetch(`https://www.googleapis.com/drive/v3/files?${params.toString()}`, {
-      next: { revalidate: 60 },
-    });
-    const file = (await parseDriveResponse(response)).files?.[0];
+    const file = await findLatestDriveFile(folderId, apiKey);
     return file ? toDriveDocument(file.id, file.mimeType) : null;
   } catch {
     return null;
   }
+}
+
+// Fetches the newest file's contents. Google Docs export to PDF, and uploaded files come through as they are.
+export async function fetchLatestDriveDocument(folderId: string): Promise<{ response: Response; extension: string }> {
+  const apiKey = getDriveApiKey();
+  const file = await findLatestDriveFile(folderId, apiKey);
+  if (!file) {
+    throw new DriveGalleryError("no_document", "The Google Drive folder has no document in it.", 404);
+  }
+
+  const isGoogleFile = file.mimeType.startsWith("application/vnd.google-apps.");
+  const params = new URLSearchParams(
+    isGoogleFile
+      ? { key: apiKey, mimeType: "application/pdf" }
+      : { key: apiKey, alt: "media", supportsAllDrives: "true" }
+  );
+  const response = await fetch(
+    `https://www.googleapis.com/drive/v3/files/${encodeURIComponent(file.id)}${isGoogleFile ? "/export" : ""}?${params.toString()}`,
+    { cache: "no-store" }
+  );
+  if (!response.ok) {
+    throw new DriveGalleryError("drive_document_error", "Google Drive could not load this document.", response.status);
+  }
+
+  const extension = isGoogleFile ? ".pdf" : file.name.match(/\.[a-z0-9]+$/i)?.[0] ?? "";
+  return { response, extension };
 }
 
 export async function fetchDrivePhoto(fileId: string): Promise<Response> {

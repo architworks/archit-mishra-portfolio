@@ -1,6 +1,6 @@
 import Image from "next/image";
 import GetInTouch from "@/components/GetInTouch";
-import { hireStats } from "@/data/site";
+import { strengths } from "@/data/site";
 
 export default function HirePanel() {
   return (
@@ -17,20 +17,20 @@ export default function HirePanel() {
               sizes="(max-width: 767px) 80vw, 480px"
             />
           </div>
-          <div>
+          <div className="am-hire__body">
             <h2 className="am-h2">Why <em className="am-accent">Work With Me</em>?</h2>
             <p className="am-hire__lede">
               I help teams trust AI in production, shipping agents with the guardrails, evals, and observability that turn a demo into measurable business value.
             </p>
-            <dl className="am-stats">
-              {hireStats.map((stat) => (
-                <div key={stat.label}>
-                  <dt>{stat.label}</dt>
-                  <dd>{stat.value}</dd>
+            <dl className="am-strengths">
+              {strengths.map((strength) => (
+                <div key={strength.title}>
+                  <dt>{strength.title}</dt>
+                  <dd>{strength.summary}</dd>
                 </div>
               ))}
             </dl>
-            <GetInTouch />
+            <div className="am-hire__cta"><GetInTouch /></div>
           </div>
         </div>
       </div>

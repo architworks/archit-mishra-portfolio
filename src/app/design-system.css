@@ -592,3 +592,41 @@ html.dark .am-theme-icon--sun { display: none; }
 @media (hover: hover) and (pointer: fine) {
   .am-btn--touch:hover .am-btn__dot { background: var(--accent-hover); transform: scale(1.06); }
 }
+.am-timeline-more { flex-wrap: wrap; gap: 12px; }
+/* Get in Touch sits at the panel's bottom right, however tall the figure beside it is. */
+.am-hire__body { align-self: stretch; display: flex; flex-direction: column; }
+.am-hire__cta { display: flex; justify-content: flex-end; margin-top: auto; }
+/* How Archit works. The numbers live in Results, so this panel doesn't repeat them. */
+.am-strengths { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 32px; margin: 0 0 36px; }
+.am-strengths div { display: grid; align-content: start; gap: 6px; }
+.am-strengths dt { color: var(--ink-heading); font-family: var(--font-display); font-size: 20px; font-weight: 600; line-height: 1.25; }
+.am-strengths dd { margin: 0; color: var(--ink-muted); font-size: 15px; line-height: 23px; text-wrap: pretty; }
+@media (max-width: 479px) { .am-strengths { grid-template-columns: minmax(0, 1fr); } }
+/* Results fit one window: every card shows at once, with no sideways scrolling. */
+.am-band--compact > .am-wrap { padding-block: clamp(40px, 4vw, 56px); }
+.am-band--compact .am-sec-head { margin-bottom: 28px; }
+.am-results { grid-auto-flow: row; grid-auto-columns: auto; grid-template-columns: minmax(0, 1fr); gap: 16px; padding-inline: 0; overflow: visible; scroll-snap-type: none; }
+.am-result { gap: 8px; padding: 20px; }
+.am-result strong { font-size: clamp(36px, 3.4vw, 48px); }
+.am-result p { font-size: 15px; line-height: 22px; }
+@media (min-width: 640px) { .am-results { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1200px) {
+  .am-results { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .am-result__top { display: grid; gap: 4px; }
+  .am-result__who { text-align: left; }
+}
+/* The footer's type stays large, with less air around it. */
+.am-footer__cta { padding-block: clamp(20px, 2vw, 28px); }
+.am-footer__cols { padding-block: 32px; }
+.am-footer__legal { padding-block: 16px; }
+/* The rail shows a scrollbar, so it's clear there are more projects. These rules keep it
+   visible on macOS, where default bars hide at rest. Chromium ignores them if the standard
+   scrollbar properties are set, so those only apply in browsers without ::-webkit-scrollbar. */
+.am-rail { padding-bottom: 16px; scroll-snap-type: x proximity; scrollbar-width: auto; scrollbar-color: auto; }
+.am-rail::-webkit-scrollbar { display: block; height: 8px; }
+.am-rail::-webkit-scrollbar-track { border-radius: var(--radius-pill); background: var(--line); }
+.am-rail::-webkit-scrollbar-thumb { border-radius: var(--radius-pill); background: var(--accent); }
+.am-rail::-webkit-scrollbar-thumb:hover { background: var(--accent-hover); }
+@supports not selector(::-webkit-scrollbar) {
+  .am-rail { scrollbar-width: thin; scrollbar-color: var(--accent) var(--line); }
+}

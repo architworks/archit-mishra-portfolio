@@ -36,6 +36,7 @@ export default function Footer() {
           <div>
             <h4>Resume</h4>
             <ul>
+              <li><a href={contact.resumeDownload}>Download PDF</a></li>
               <li><Link href="/resume">View Resume</Link></li>
             </ul>
           </div>

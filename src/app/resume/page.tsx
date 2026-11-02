@@ -16,7 +16,7 @@ export default async function ResumePage() {
       {resume ? (
         <>
           <div className="am-project-head__actions" style={{ margin: "0 0 24px" }}>
-            <a className="am-btn am-btn--primary am-btn--sm" href={resume.downloadUrl}>
+            <a className="am-btn am-btn--primary am-btn--sm" href={contact.resumeDownload}>
               Download
             </a>
             <a className="am-btn am-btn--ghost am-btn--sm" href={resume.openUrl} target="_blank" rel="noreferrer">

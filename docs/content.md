@@ -56,7 +56,7 @@ Most short copy lives in `src/data/site.ts`:
 | `navLeft`, `navRight` | Links on either side of the navbar; the footer reuses them |
 | `services` | "What I Build" cards |
 | `roles` | Experience timeline, including each role's `readout` |
-| `hireStats` | Numbers in the "Why Hire Me?" panel |
+| `strengths` | The "how I work" points in the "Why Work With Me?" panel; keep numbers out, since Results has them |
 | `results` | Measured outcome cards |
 | `skills` | Words in the scrolling marquee |
 
@@ -66,7 +66,7 @@ A few details to watch for:
 - A service with `highlights` shows them under a diagram, which `src/components/ServicesBand.tsx` looks up by the service's `title`. If you rename or add one, update the `diagrams` map too.
 - A service with an empty `highlights` list shows `public/images/photo-flt-6151.webp` instead.
 
-Headlines and one-off sentences stay in their components. For example, the "Why Hire Me?" paragraph is in `src/components/HirePanel.tsx`, and the location and employer list is in `src/components/Discuss.tsx`.
+Headlines and one-off sentences stay in their components. For example, the "Why Work With Me?" paragraph is in `src/components/HirePanel.tsx`, and the location and employer list is in `src/components/Discuss.tsx`.
 
 ## Photography
 
@@ -95,7 +95,7 @@ Add a photo to the folder and it appears on the site. There is nothing else to m
 ## Contact & metadata
 
 - Phone, email, LinkedIn, and the resume link live in `contact` in `src/data/site.ts`. The footer and "Let's Discuss" form both read from it.
-- The resume is whatever document is in the Drive folder set by `contact.resumeFolderId` in `src/data/site.ts`. Drop in a Google Doc, PDF, or Word file and `/resume` shows it within about a minute. If the folder holds more than one, the most recently changed file wins. Share the folder once as "Anyone with the link: Viewer", and files added later inherit that.
+- The resume is whatever document is in the Drive folder set by `contact.resumeFolderId` in `src/data/site.ts`. Drop in a Google Doc, PDF, or Word file and `/resume` shows it within about a minute. Download links use `contact.resumeDownload`, and a Google Doc downloads as a PDF. If the folder holds more than one, the most recently changed file wins. Share the folder once as "Anyone with the link: Viewer", and files added later inherit that.
 - Update `src/app/layout.tsx` metadata (title, description, `metadataBase`) if the name or domain changes.
 
 ## Static assets

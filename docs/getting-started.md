@@ -57,7 +57,7 @@ The rest of the site works without them. `/photography` shows its "Couldn't Load
 │   │   ├── icon.svg          # Favicon
 │   │   ├── globals.css       # Design tokens for light and dark themes
 │   │   ├── design-system.css # Component styles (am-* classes)
-│   │   ├── api/drive/        # Routes that list and serve Google Drive photos
+│   │   ├── api/drive/        # Routes that serve Google Drive photos and the resume
 │   │   ├── photography/      # Route for the photography gallery
 │   │   └── projects/         # Project listing + dynamic [slug] detail pages
 │   ├── components            # One component per section or shared UI block
@@ -69,7 +69,7 @@ The rest of the site works without them. `/photography` shows its "Couldn't Load
 ├── content
 │   └── projects              # MDX files for project writeups, plus TEMPLATE.mdx
 ├── fonts                     # Urbanist and Lufga font files
-├── public                    # Images, the logo mark, and the resume PDF
+├── public                    # Images and the logo mark
 ├── docs                      # This documentation set (MkDocs)
 ├── DESIGN.md                 # Link to the design system and its key rules
 ├── .env.example              # Environment variables to copy into .env.local

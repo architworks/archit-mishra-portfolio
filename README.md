@@ -31,7 +31,8 @@ npm run dev
 | Component styles (`am-*` classes) | `src/app/design-system.css` |
 | Projects | `content/projects/*.mdx`, starting from `content/projects/TEMPLATE.mdx` |
 | Page title, description, and site URL | `src/app/layout.tsx` |
-| Images and the resume PDF | `public/` |
+| Images | `public/` |
+| The resume | The newest file in the Drive folder set by `contact.resumeFolderId` in `src/data/site.ts` |
 
 Read `DESIGN.md` before changing the look of the site. It links to the design system and lists the rules that matter most.
 
